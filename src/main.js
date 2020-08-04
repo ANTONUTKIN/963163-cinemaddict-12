@@ -7,6 +7,7 @@ import {createShowMoreButtonTemplate} from "./view/load-more-button.js";
 import {createTopRatedContainerTemplate} from "./view/top-rated.js";
 import {createMostCommentedContainerTemplate} from "./view/most-commented.js";
 
+
 const CARDS_COUNT = 5;
 const CARDS_IN_BLOCK_COUNT = 2;
 
