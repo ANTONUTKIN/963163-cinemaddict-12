@@ -6,6 +6,7 @@ import {createFilmCardTemplate} from "./view/film-card.js";
 import {createShowMoreButtonTemplate} from "./view/load-more-button.js";
 import {createTopRatedContainerTemplate} from "./view/top-rated.js";
 import {createMostCommentedContainerTemplate} from "./view/most-commented.js";
+import {generateCard} from "./mock/task.js";
 
 
 const CARDS_COUNT = 5;
@@ -28,7 +29,8 @@ render(siteMainElement, createFilmContainerTemplate(), `beforeend`);
 // Вставляем карточки фильмов
 const filmContainer = siteMainElement.querySelector(`.films-list__container`);
 for (let i = 0; i < CARDS_COUNT; i++) {
-  render(filmContainer, createFilmCardTemplate(), `beforeend`);
+  const card = generateCard()
+  render(filmContainer, createFilmCardTemplate(card), `beforeend`);
 }
 
 // Вставляем кнопку Show more
@@ -40,11 +42,12 @@ const filmElement = siteMainElement.querySelector(`.films`);
 render(filmElement, createTopRatedContainerTemplate(), `beforeend`);
 render(filmElement, createMostCommentedContainerTemplate(), `beforeend`);
 
-// Вставляем по 2карточки фильмов в контейнеры Top rated и Mos commented
+// Вставляем по 2 карточки фильмов в контейнеры Top rated и Mos commented
 const filmListExtra = siteMainElement.querySelectorAll(`.films-list--extra`);
 
 filmListExtra.forEach((element) => {
   for (let i = 0; i < CARDS_IN_BLOCK_COUNT; i++) {
-    render(element.querySelector(`.films-list__container`), createFilmCardTemplate(), `beforeend`);
+    const card = generateCard()
+    render(element.querySelector(`.films-list__container`), createFilmCardTemplate(card), `beforeend`);
   }
 });
