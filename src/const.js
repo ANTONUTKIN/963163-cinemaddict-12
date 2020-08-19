@@ -1,4 +1,4 @@
-export const DATA  = {
+export const DATA = {
   MIN_COMMENTS: 0,
   MAX_COMMENTS: 5,
   MIN_SENTENCES: 1,
@@ -19,4 +19,4 @@ export const DATA  = {
   MIN_WRITERS: 1,
   MAX_WRITERS: 3,
   MIN_ACTORS: 2
-}
+};

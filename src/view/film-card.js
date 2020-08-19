@@ -1,15 +1,15 @@
 export const createFilmCardTemplate = (card) => {
   const addToWachlistClassName = card.isAddedInWachlist
-  ? `film-card__controls-item film-card__controls-item--active`
-  : `film-card__controls-item`;
+    ? `film-card__controls-item film-card__controls-item--active`
+    : `film-card__controls-item`;
 
   const watchedClassName = card.isWatched
-  ? `film-card__controls-item film-card__controls-item--active`
-  : `film-card__controls-item`;
+    ? `film-card__controls-item film-card__controls-item--active`
+    : `film-card__controls-item`;
 
   const favoriteClassName = card.isFavorite
-  ? `film-card__controls-item film-card__controls-item--active`
-  : `film-card__controls-item`;
+    ? `film-card__controls-item film-card__controls-item--active`
+    : `film-card__controls-item`;
 
   return (
     `<article class="film-card">

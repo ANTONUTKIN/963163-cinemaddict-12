@@ -6,14 +6,15 @@ import {createFilmCardTemplate} from "./view/film-card.js";
 import {createShowMoreButtonTemplate} from "./view/load-more-button.js";
 import {createTopRatedContainerTemplate} from "./view/top-rated.js";
 import {createMostCommentedContainerTemplate} from "./view/most-commented.js";
-import {createDetailsPopupTemplate} from "./view/details.js";
+// import {createDetailsPopupTemplate} from "./view/details.js";
 import {generateCard} from "./mock/card.js";
-import {generatePopup} from "./mock/popup.js";
+// import {generatePopup} from "./mock/popup.js";
 import {generateFilters} from "./mock/filters.js";
 
 
-const CARDS_COUNT = 5;
+const CARDS_COUNT = 18;
 const CARDS_IN_BLOCK_COUNT = 2;
+const TASK_COUNT_PER_STEP = 5;
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -34,13 +35,31 @@ render(siteMainElement, createFilmContainerTemplate(), `beforeend`);
 
 // Вставляем карточки фильмов
 const filmContainer = siteMainElement.querySelector(`.films-list__container`);
-for (let i = 0; i < CARDS_COUNT; i++) {
+for (let i = 0; i < Math.min(films.length, TASK_COUNT_PER_STEP); i++) {
   render(filmContainer, createFilmCardTemplate(films[i]), `beforeend`);
 }
 
 // Вставляем кнопку Show more
-const filmList = siteMainElement.querySelector(`.films-list`);
-render(filmList, createShowMoreButtonTemplate(), `beforeend`);
+if (films.length > TASK_COUNT_PER_STEP) {
+  let renderedTaskCount = TASK_COUNT_PER_STEP;
+  const filmList = siteMainElement.querySelector(`.films-list`);
+
+  render(filmList, createShowMoreButtonTemplate(), `beforeend`);
+
+  const loadMoreButton = siteMainElement.querySelector(`.films-list__show-more`);
+  loadMoreButton.addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+    films
+    .slice(renderedTaskCount, renderedTaskCount + TASK_COUNT_PER_STEP)
+    .forEach((card) => render(filmContainer, createFilmCardTemplate(card), `beforeend`));
+
+    renderedTaskCount += TASK_COUNT_PER_STEP;
+
+    if (renderedTaskCount >= films.length) {
+      loadMoreButton.remove();
+    }
+  });
+}
 
 // Вставляем контейнеры Top Rated и Most commented
 const filmElement = siteMainElement.querySelector(`.films`);
@@ -52,13 +71,13 @@ const filmListExtra = siteMainElement.querySelectorAll(`.films-list--extra`);
 
 filmListExtra.forEach((element) => {
   for (let i = 0; i < CARDS_IN_BLOCK_COUNT; i++) {
-    const card = generateCard()
+    const card = generateCard();
     render(element.querySelector(`.films-list__container`), createFilmCardTemplate(card), `beforeend`);
   }
 });
 
 // Вставляем контейнер попапа с подробныи описанием фильма
-const documentBody = document.querySelector(`body`);
-const popup = generatePopup();
-//render(documentBody, createDetailsPopupTemplate(popup), `beforeend`);
+// const documentBody = document.querySelector(`body`);
+// const popup = generatePopup();
+// render(documentBody, createDetailsPopupTemplate(popup), `beforeend`);
 

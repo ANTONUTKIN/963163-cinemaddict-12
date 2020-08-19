@@ -30,7 +30,7 @@ const generatePosterAdress = () => {
   ];
 
   const randomIndex = getRandomInteger(0, posterPhoto.length - 1);
-  const posterAdres = 'src="./images/posters/' + posterPhoto[randomIndex] + '"';
+  const posterAdres = `src="./images/posters/` + posterPhoto[randomIndex] + `"`;
 
   return posterAdres;
 };
@@ -52,19 +52,19 @@ const generateDiscription = () => {
 
   const randomIndex = getRandomInteger(1, discriptionArr.length - 1);
   const discription = discriptionArr[randomIndex];
-  return discription
+  return discription;
 };
 
 const generateCommentsNumber = () => {
   const randomCommentIndex = getRandomInteger(DATA.MIN_COMMENTS, DATA.MAX_COMMENTS);
 
-  return randomCommentIndex
+  return randomCommentIndex;
 };
 
 const generateFilmDate = () => {
   const randomDate = getRandomInteger(DATA.MIN_DATE, DATA.MAX_DATE);
 
-  return randomDate
+  return randomDate;
 };
 
 const generateGenre = () => {
@@ -86,17 +86,17 @@ const generateGenre = () => {
 const generateTime = () => {
   const hourIndex = getRandomInteger(DATA.MIN_HOURS, DATA.MAX_HOURS);
   const minuteIndex = getRandomInteger(DATA.MIN_MINUTES, DATA.MAX_MINUTES);
-  const filmDuration = hourIndex + 'h ' + minuteIndex + 'm';
+  const filmDuration = hourIndex + `h ` + minuteIndex + `m`;
 
-  return filmDuration
-}
+  return filmDuration;
+};
 
 const generateRating = () => {
   const randomIndex = Math.random() * DATA.MAX_RATING;
   const ratingIndex = randomIndex.toFixed(1);
 
-  return ratingIndex
-}
+  return ratingIndex;
+};
 
 export const generateCard = () => {
   return {
@@ -111,5 +111,5 @@ export const generateCard = () => {
     isAddedInWachlist: Boolean(getRandomInteger(0, 1)),
     isWatched: Boolean(getRandomInteger(0, 1)),
     isFavorite: Boolean(getRandomInteger(0, 1))
-  }
+  };
 };

@@ -20,7 +20,7 @@ const generateDirectorName = () => {
   const name = names[randomIndex];
 
   return name;
-}
+};
 
 const generateCountry = () => {
   const countries = [
@@ -34,7 +34,7 @@ const generateCountry = () => {
   const country = countries[randomIndex];
 
   return country;
-}
+};
 
 const generateDate = () => {
   const months = [
@@ -56,7 +56,7 @@ const generateDate = () => {
   const randomDay = getRandomInteger(DATA.MIN_DAYS, DATA.MAX_DAYS);
   const randomYear = getRandomInteger(DATA.MIN_DATE, DATA.MAX_DATE);
 
-  const renderDate = randomDay + " " + randomMonth + " " + randomYear;
+  const renderDate = randomDay + ` ` + randomMonth + ` ` + randomYear;
   return renderDate;
 };
 
@@ -77,18 +77,18 @@ const generateDiscription = () => {
 
   const newArr = [];
   const randomMember = getRandomInteger(DATA.MIN_SENTENCES, DATA.MAX_SENTENCES);
-  const getRandomText = () => { 
+  const getRandomText = () => {
     for (let i = 0; i < randomMember; i++) {
       const randomIndex = getRandomInteger(1, discriptionArr.length - 1);
       const discription = discriptionArr[randomIndex];
-      newArr.push(discription)
+      newArr.push(discription);
     }
-    return newArr
-  }
+    return newArr;
+  };
   const textArr = getRandomText();
-  const result = textArr.join(" ");
+  const result = textArr.join(` `);
 
-  return result
+  return result;
 };
 
 const generateWriters = () => {
@@ -106,18 +106,18 @@ const generateWriters = () => {
 
   const newArr = [];
   const randomMember = getRandomInteger(DATA.MIN_WRITERS, DATA.MAX_WRITERS);
-  const getRandomText = () => { 
+  const getRandomText = () => {
     for (let i = 0; i < randomMember; i++) {
       const randomIndex = getRandomInteger(1, writersnArr.length - 1);
       const discription = writersnArr[randomIndex];
-      newArr.push(discription)
+      newArr.push(discription);
     }
-    return newArr
-  }
+    return newArr;
+  };
   const textArr = getRandomText();
-  const result = textArr.join(", ");
+  const result = textArr.join(`, `);
 
-  return result
+  return result;
 };
 
 const generateActors = () => {
@@ -137,18 +137,18 @@ const generateActors = () => {
 
   const newArr = [];
   const randomMember = getRandomInteger(DATA.MIN_ACTORS, DATA.MAX_WRITERS);
-  const getRandomText = () => { 
+  const getRandomText = () => {
     for (let i = 0; i < randomMember; i++) {
       const randomIndex = getRandomInteger(1, actorsArr.length - 1);
       const discription = actorsArr[randomIndex];
-      newArr.push(discription)
+      newArr.push(discription);
     }
-    return newArr
-  }
+    return newArr;
+  };
   const textArr = getRandomText();
-  const result = textArr.join(", ");
+  const result = textArr.join(`, `);
 
-  return result
+  return result;
 };
 
 const generateGenre = () => {
@@ -160,24 +160,24 @@ const generateGenre = () => {
     `Comedy`,
     `Cartoon`,
     `Mystery`,
-  ]
+  ];
 
   const randomNumber = getRandomInteger(DATA.MIN_GENRES, DATA.MAX_GENRES);
   const newArr = [];
-  const getRandomGenre = () => { 
+  const getRandomGenre = () => {
     for (let i = 0; i < randomNumber; i++) {
       const randomIndex = getRandomInteger(1, genreArr.length - 1);
       const discription = genreArr[randomIndex];
-      const renderGenre = '<span class="film-details__genre">' + discription + '</span>';
-      newArr.push(renderGenre)
+      const renderGenre = `<span class="film-details__genre">` + discription + `</span>`;
+      newArr.push(renderGenre);
     }
     return newArr;
-  }
+  };
 
   const textArr = getRandomGenre();
-  const result = textArr.join(" ");
+  const result = textArr.join(` `);
 
-  return result
+  return result;
 };
 
 export const generatePopup = () => {
@@ -194,5 +194,5 @@ export const generatePopup = () => {
     actors: generateActors(),
     genre: generateGenre(),
     age: getRandomInteger(DATA.MIN_AGE, DATA.MAX_AGE),
-  }
-}
+  };
+};
