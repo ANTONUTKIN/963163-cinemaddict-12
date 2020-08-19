@@ -1,4 +1,16 @@
 export const createFilmCardTemplate = (card) => {
+  const addToWachlistClassName = card.isAddedInWachlist
+  ? `film-card__controls-item film-card__controls-item--active`
+  : `film-card__controls-item`;
+
+  const watchedClassName = card.isWatched
+  ? `film-card__controls-item film-card__controls-item--active`
+  : `film-card__controls-item`;
+
+  const favoriteClassName = card.isFavorite
+  ? `film-card__controls-item film-card__controls-item--active`
+  : `film-card__controls-item`;
+
   return (
     `<article class="film-card">
       <h3 class="film-card__title">${card.filmName}</h3>
@@ -12,9 +24,9 @@ export const createFilmCardTemplate = (card) => {
       <p class="film-card__description">${card.discription}</p>
       <a class="film-card__comments">${card.comments} comments</a>
       <form class="film-card__controls">
-        <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
-        <button class="film-card__controls-item button film-card__controls-item--mark-as-watched  film-card__controls-item--active">Mark as watched</button>
-        <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
+        <button class="${addToWachlistClassName} film-card__controls-item--add-to-watchlist">Add to watchlist</button>
+        <button class="${watchedClassName} film-card__controls-item--mark-as-watched">Mark as watched</button>
+        <button class="${favoriteClassName} button film-card__controls-item--favorite">Mark as favorite</button>
       </form>
     </article>`
   );

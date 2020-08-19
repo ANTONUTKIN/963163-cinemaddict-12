@@ -6,7 +6,10 @@ import {createFilmCardTemplate} from "./view/film-card.js";
 import {createShowMoreButtonTemplate} from "./view/load-more-button.js";
 import {createTopRatedContainerTemplate} from "./view/top-rated.js";
 import {createMostCommentedContainerTemplate} from "./view/most-commented.js";
-import {generateCard} from "./mock/task.js";
+import {createDetailsPopupTemplate} from "./view/details.js";
+import {generateCard} from "./mock/card.js";
+import {generatePopup} from "./mock/popup.js";
+import {generateFilters} from "./mock/filters.js";
 
 
 const CARDS_COUNT = 5;
@@ -15,6 +18,8 @@ const CARDS_IN_BLOCK_COUNT = 2;
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
+const films = new Array(CARDS_COUNT).fill().map(generateCard);
+const filters = generateFilters(films);
 
 // Вставляем иконку профиля пользователя
 const siteHeaderElement = document.querySelector(`.header`);
@@ -22,15 +27,15 @@ render(siteHeaderElement, createProfileRatingTemplate(), `beforeend`);
 
 // Вставляем меню статистики, затем фильтров, затем контейнера карточек фильмов
 const siteMainElement = document.querySelector(`.main`);
-render(siteMainElement, createStatsTemplate(), `beforeend`);
+render(siteMainElement, createStatsTemplate(filters), `beforeend`);
 render(siteMainElement, createSortTemplate(), `beforeend`);
 render(siteMainElement, createFilmContainerTemplate(), `beforeend`);
+
 
 // Вставляем карточки фильмов
 const filmContainer = siteMainElement.querySelector(`.films-list__container`);
 for (let i = 0; i < CARDS_COUNT; i++) {
-  const card = generateCard()
-  render(filmContainer, createFilmCardTemplate(card), `beforeend`);
+  render(filmContainer, createFilmCardTemplate(films[i]), `beforeend`);
 }
 
 // Вставляем кнопку Show more
@@ -51,3 +56,9 @@ filmListExtra.forEach((element) => {
     render(element.querySelector(`.films-list__container`), createFilmCardTemplate(card), `beforeend`);
   }
 });
+
+// Вставляем контейнер попапа с подробныи описанием фильма
+const documentBody = document.querySelector(`body`);
+const popup = generatePopup();
+//render(documentBody, createDetailsPopupTemplate(popup), `beforeend`);
+

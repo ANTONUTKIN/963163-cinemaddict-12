@@ -1,14 +1,5 @@
 import {getRandomInteger} from "../utils.js";
-
-const MIN_COMMENTS = 0;
-const MAX_COMMENTS = 5;
-const MIN_DATE = 1920;
-const MAX_DATE = 2020;
-const MIN_HOURS = 0;
-const MAX_HOURS = 3;
-const MIN_MINUTES = 0;
-const MAX_MINUTES = 59;
-const MAX_RATING = 10;
+import {DATA} from "../const.js";
 
 
 const generateFilmName = () => {
@@ -65,13 +56,13 @@ const generateDiscription = () => {
 };
 
 const generateCommentsNumber = () => {
-  const randomCommentIndex = getRandomInteger(MIN_COMMENTS, MAX_COMMENTS);
+  const randomCommentIndex = getRandomInteger(DATA.MIN_COMMENTS, DATA.MAX_COMMENTS);
 
   return randomCommentIndex
 };
 
 const generateFilmDate = () => {
-  const randomDate = getRandomInteger(MIN_DATE, MAX_DATE);
+  const randomDate = getRandomInteger(DATA.MIN_DATE, DATA.MAX_DATE);
 
   return randomDate
 };
@@ -93,15 +84,15 @@ const generateGenre = () => {
 };
 
 const generateTime = () => {
-  const hourIndex = getRandomInteger(MIN_HOURS, MAX_HOURS);
-  const minuteIndex = getRandomInteger(MIN_MINUTES, MAX_MINUTES);
+  const hourIndex = getRandomInteger(DATA.MIN_HOURS, DATA.MAX_HOURS);
+  const minuteIndex = getRandomInteger(DATA.MIN_MINUTES, DATA.MAX_MINUTES);
   const filmDuration = hourIndex + 'h ' + minuteIndex + 'm';
 
   return filmDuration
 }
 
 const generateRating = () => {
-  const randomIndex = Math.random() * MAX_RATING;
+  const randomIndex = Math.random() * DATA.MAX_RATING;
   const ratingIndex = randomIndex.toFixed(1);
 
   return ratingIndex
@@ -116,6 +107,9 @@ export const generateCard = () => {
     date: generateFilmDate(),
     genre: generateGenre(),
     duration: generateTime(),
-    rating: generateRating()
+    rating: generateRating(),
+    isAddedInWachlist: Boolean(getRandomInteger(0, 1)),
+    isWatched: Boolean(getRandomInteger(0, 1)),
+    isFavorite: Boolean(getRandomInteger(0, 1))
   }
 };
