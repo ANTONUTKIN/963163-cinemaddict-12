@@ -1,4 +1,6 @@
-export const createFilmCardTemplate = (card) => {
+import {createElement} from "../utils.js";
+
+const createFilmCardTemplate = (card) => {
   const addToWachlistClassName = card.isAddedInWachlist
     ? `film-card__controls-item film-card__controls-item--active`
     : `film-card__controls-item`;
@@ -31,3 +33,26 @@ export const createFilmCardTemplate = (card) => {
     </article>`
   );
 };
+
+export default class Card {
+  constructor(card) {
+    this.card = card;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmCardTemplate(this.card);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
