@@ -1,4 +1,6 @@
-export const createDetailsPopupTemplate = (popup) => {
+import {createElement} from "../utils.js";
+
+const createDetailsPopupTemplate = (card) => {
   return (
     `<section class="film-details">
       <form class="film-details__inner" action="" method="get">
@@ -8,56 +10,56 @@ export const createDetailsPopupTemplate = (popup) => {
           </div>
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
-              <img class="film-details__poster-img" ${popup.poster} alt="">
+              <img class="film-details__poster-img" ${card.poster} alt="">
     
-              <p class="film-details__age">${popup.age}+</p>
+              <p class="film-details__age">${card.age}+</p>
             </div>
     
             <div class="film-details__info">
               <div class="film-details__info-head">
                 <div class="film-details__title-wrap">
-                  <h3 class="film-details__title">${popup.filmName}</h3>
-                  <p class="film-details__title-original">Original: ${popup.filmName}</p>
+                  <h3 class="film-details__title">${card.filmName}</h3>
+                  <p class="film-details__title-original">Original: ${card.filmName}</p>
                 </div>
     
                 <div class="film-details__rating">
-                  <p class="film-details__total-rating">${popup.rating}</p>
+                  <p class="film-details__total-rating">${card.rating}</p>
                 </div>
               </div>
     
               <table class="film-details__table">
                 <tr class="film-details__row">
                   <td class="film-details__term">Director</td>
-                  <td class="film-details__cell">${popup.director}</td>
+                  <td class="film-details__cell">${card.director}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Writers</td>
-                  <td class="film-details__cell">${popup.writers}</td>
+                  <td class="film-details__cell">${card.writers}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Actors</td>
-                  <td class="film-details__cell">${popup.actors}</td>
+                  <td class="film-details__cell">${card.actors}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">${popup.date}</td>
+                  <td class="film-details__cell">${card.datePopup}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${popup.duration}</td>
+                  <td class="film-details__cell">${card.duration}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>
-                  <td class="film-details__cell">${popup.country}</td>
+                  <td class="film-details__cell">${card.country}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Genres</td>
-                  <td class="film-details__cell">${popup.genre}</td>                  
+                  <td class="film-details__cell">${card.genrePopup}</td>                  
                 </tr>
               </table>
     
               <p class="film-details__film-description">
-                ${popup.description}
+                ${card.discriptionPopup}
               </p>
             </div>
           </div>
@@ -168,3 +170,27 @@ export const createDetailsPopupTemplate = (popup) => {
     </section>`
   );
 };
+
+export default class CardPopup {
+  constructor(card) {
+    this.card = card;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createDetailsPopupTemplate(this.card);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+

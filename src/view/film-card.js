@@ -34,6 +34,7 @@ const createFilmCardTemplate = (card) => {
   );
 };
 
+
 export default class Card {
   constructor(card) {
     this.card = card;

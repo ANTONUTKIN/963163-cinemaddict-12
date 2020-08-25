@@ -7,9 +7,8 @@ import Card from "./view/film-card.js";
 import ShowMore from "./view/load-more-button.js";
 import TopRatedContainer from "./view/top-rated.js";
 import MostCommentedContainer from "./view/most-commented.js";
-// import {createDetailsPopupTemplate} from "./view/details.js";
+import CardPopup from "./view/popup-card.js";
 import {generateCard} from "./mock/card.js";
-// import {generatePopup} from "./mock/popup.js";
 import {generateFilters} from "./mock/filters.js";
 import {renderElement, RenderPosition} from "./utils.js";
 
@@ -20,13 +19,19 @@ const TASK_COUNT_PER_STEP = 5;
 
 const films = new Array(CARDS_COUNT).fill().map(generateCard);
 const filters = generateFilters(films);
+const siteMainElement = document.querySelector(`.main`);
+const documentBody = document.querySelector(`body`);
+const siteHeaderElement = document.querySelector(`.header`);
+
+const removeElement = (element) => {
+  element.getElement().remove();
+  element.removeElement();
+};
 
 // Вставляем иконку профиля пользователя
-const siteHeaderElement = document.querySelector(`.header`);
 renderElement(siteHeaderElement, new ProfileRating().getElement(), RenderPosition.BEFOREEND);
 
 // Вставляем меню статистики, затем в него элементы фильтров
-const siteMainElement = document.querySelector(`.main`);
 const navBoardComponent = new NavBoard();
 renderElement(siteMainElement, navBoardComponent.getElement(), RenderPosition.BEFOREEND);
 renderElement(navBoardComponent.getElement(), new StatsFilter(filters).getElement(), RenderPosition.AFTERBEGIN);
@@ -41,16 +46,15 @@ renderElement(siteMainElement, filmCardboard.getElement(), RenderPosition.BEFORE
 
 // Вставляем карточки фильмов
 const filmCardContainer = siteMainElement.querySelector(`.films-list__container`);
-for (let i = 0; i < Math.min(films.length, TASK_COUNT_PER_STEP); i++) {
-  renderElement(filmCardContainer, new Card(films[i]).getElement(), RenderPosition.BEFOREEND);
-}
+
 
 // Вставляем кнопку Show more
 if (films.length > TASK_COUNT_PER_STEP) {
   let renderedTaskCount = TASK_COUNT_PER_STEP;
   const filmList = siteMainElement.querySelector(`.films-list`);
+  const showMoreButtonComponent = new ShowMore();
 
-  renderElement(filmList, new ShowMore().getElement(), RenderPosition.BEFOREEND);
+  renderElement(filmList, showMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
 
   const loadMoreButton = siteMainElement.querySelector(`.films-list__show-more`);
   loadMoreButton.addEventListener(`click`, (evt) => {
@@ -62,7 +66,7 @@ if (films.length > TASK_COUNT_PER_STEP) {
     renderedTaskCount += TASK_COUNT_PER_STEP;
 
     if (renderedTaskCount >= films.length) {
-      loadMoreButton.remove();
+      removeElement(showMoreButtonComponent);
     }
   });
 }
@@ -80,8 +84,19 @@ filmListExtra.forEach((element) => {
   }
 });
 
-// Вставляем контейнер попапа с подробныи описанием фильма
-// const documentBody = document.querySelector(`body`);
-// const popup = generatePopup();
-// render(documentBody, createDetailsPopupTemplate(popup), `beforeend`);
+// Вешаем обработчик события при клике на карту и показ контейнера попапа с подробныи описанием фильма
+const renderPopup = () => {
+  for (let i = 0; i < Math.min(films.length, TASK_COUNT_PER_STEP); i++) {
+    const filmCard = new Card(films[i]);
+    const filmPopup = new CardPopup(films[i]);
+    renderElement(filmCardContainer, filmCard.getElement(), RenderPosition.BEFOREEND);
+    filmCard.getElement().addEventListener(`click`, () => {
+      renderElement(documentBody, filmPopup.getElement(), RenderPosition.BEFOREEND);
+      filmPopup.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, () => {
+        removeElement(filmPopup);
+      });
+    });
+  }
+};
 
+renderPopup();
