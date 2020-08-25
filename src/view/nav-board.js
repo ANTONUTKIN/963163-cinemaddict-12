@@ -1,22 +1,20 @@
 import {createElement} from "../utils.js";
 
-const createMostCommentedContainerTemplate = () => {
+const createNavBoard = () => {
   return (
-    `<section class="films-list--extra">
-      <h2 class="films-list__title">Most commented</h2>
-      <div class="films-list__container">
-      </div>
-    </section>`
+    `<nav class="main-navigation">
+      <a href="#stats" class="main-navigation__additional">Stats</a>
+    </nav>`
   );
 };
 
-export default class MostCommentedContainer {
+export default class NavBoard {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createMostCommentedContainerTemplate();
+    return createNavBoard();
   }
 
   getElement() {
@@ -31,4 +29,3 @@ export default class MostCommentedContainer {
     this._element = null;
   }
 }
-
