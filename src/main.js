@@ -48,6 +48,7 @@ const renderCard = (cardListElement, content) => {
     document.addEventListener(`keydown`, onEscKeyDown);
     filmPopup.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, () => {
       removeElement(filmPopup);
+      document.removeEventListener(`keydown`, onEscKeyDown);
     });
   });
 };
