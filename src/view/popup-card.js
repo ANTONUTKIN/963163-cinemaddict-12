@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import Abstract from "./abstract.js";
 
 const createDetailsPopupTemplate = (card) => {
   return (
@@ -171,26 +171,14 @@ const createDetailsPopupTemplate = (card) => {
   );
 };
 
-export default class CardPopup {
+export default class CardPopup extends Abstract {
   constructor(card) {
+    super();
     this.card = card;
-    this._element = null;
   }
 
   getTemplate() {
     return createDetailsPopupTemplate(this.card);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 
