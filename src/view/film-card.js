@@ -39,9 +39,21 @@ export default class Card extends Abstract {
   constructor(card) {
     super();
     this.card = card;
+
+    this._showPopupHandler = this._showPopupHandler.bind(this);
   }
 
   getTemplate() {
     return createFilmCardTemplate(this.card);
+  }
+
+  _showPopupHandler(evt) {
+    evt.preventDefault();
+    this._callback.editClick();
+  }
+
+  setShowPopupHandler(callback) {
+    this._callback.editClick = callback;
+    this.getElement().addEventListener(`click`, this._showPopupHandler);
   }
 }

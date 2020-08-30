@@ -175,10 +175,22 @@ export default class CardPopup extends Abstract {
   constructor(card) {
     super();
     this.card = card;
+
+    this._closePopupHandler = this._closePopupHandler.bind(this);
   }
 
   getTemplate() {
     return createDetailsPopupTemplate(this.card);
+  }
+
+  _closePopupHandler(evt) {
+    evt.preventDefault();
+    this._callback.editClick();
+  }
+
+  setClosePopupHandler(callback) {
+    this._callback.editClick = callback;
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closePopupHandler);
   }
 }
 
