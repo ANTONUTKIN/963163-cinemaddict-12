@@ -36,10 +36,10 @@ export default class Board {
 
   // Метод инициализации модуля
   init() {
-    this._renderIcon()
-    this._renderStats()
-    this._renderCardBoard()
-    this._renderExtraContainers()
+    this._renderIcon();
+    this._renderStats();
+    this._renderCardBoard();
+    this._renderExtraContainers();
   }
 
   // Метод рендеринга иконки профиля
@@ -54,7 +54,7 @@ export default class Board {
     renderElement(this._boardContainer, this._navBoardComponent, RenderPosition.BEFOREEND);
     renderElement(this._navBoardComponent, this._statsComponent, RenderPosition.AFTERBEGIN);
 
-    this._renderSortMenu()
+    this._renderSortMenu();
   }
 
   _renderSortMenu() {
@@ -69,30 +69,29 @@ export default class Board {
       renderElement(this._boardContainer, this._cardBoardComponent, RenderPosition.BEFOREEND);
     }
 
-    this._renderCard()
-    this._renderShowMoreButton()
+    this._renderCard();
+    this._renderShowMoreButton();
   }
 
   // Метод создания карточек фильмов
   _createCard(cardListElement, content) {
-    this._filmCardComponent = new Card(content);
-    this._filmPopupComponent = new CardPopup(content);
+    const filmCardComponent = new Card(content);
+    const filmPopupComponent = new CardPopup(content);
 
     const onEscKeyDown = (evt) => {
       if (evt.key === `Escape` || evt.key === `Esc`) {
         evt.preventDefault();
-        removeElement(this._filmPopupComponent);
+        removeElement(filmPopupComponent);
         document.removeEventListener(`keydown`, onEscKeyDown);
       }
     };
 
-    renderElement(cardListElement, this._filmCardComponent, RenderPosition.BEFOREEND);
-
-    this._filmCardComponent.setShowPopupHandler(() => {
-      renderElement(this._documentBodyContainer, this._filmPopupComponent, RenderPosition.BEFOREEND);
+    renderElement(cardListElement, filmCardComponent, RenderPosition.BEFOREEND);
+    filmCardComponent.setShowPopupHandler(() => {
+      renderElement(this._documentBodyContainer, filmPopupComponent, RenderPosition.BEFOREEND);
       document.addEventListener(`keydown`, onEscKeyDown);
-      this._filmPopupComponent.setClosePopupHandler(() => {
-        removeElement(this._filmPopupComponent);
+      filmPopupComponent.setClosePopupHandler(() => {
+        removeElement(filmPopupComponent);
         document.removeEventListener(`keydown`, onEscKeyDown);
       });
     });
@@ -112,16 +111,16 @@ export default class Board {
       let renderedTaskCount = TASK_COUNT_PER_STEP;
       const filmList = this._boardContainer.querySelector(`.films-list`);
       const filmCardContainer = this._boardContainer.querySelector(`.films-list__container`);
-    
+
       renderElement(filmList, this._showMoreComponent, RenderPosition.BEFOREEND);
-    
+
       this._showMoreComponent.setClickHandler(() => {
         this._cardListComponent
         .slice(renderedTaskCount, renderedTaskCount + TASK_COUNT_PER_STEP)
         .forEach((card) => this._createCard(filmCardContainer, card));
-    
+
         renderedTaskCount += TASK_COUNT_PER_STEP;
-    
+
         if (renderedTaskCount >= this._cardListComponent.length) {
           removeElement(this._showMoreComponent);
         }
@@ -130,23 +129,22 @@ export default class Board {
   }
 
   // Мeтод рендеринга контейнеров для Top Rated и Most Commented фильмов
-  _renderExtraContainers () {
+  _renderExtraContainers() {
     renderElement(this._cardBoardComponent, this._topRatedComponent, RenderPosition.BEFOREEND);
-    renderElement(this._cardBoardComponent,  this._mostViewedComponent, RenderPosition.BEFOREEND);
+    renderElement(this._cardBoardComponent, this._mostViewedComponent, RenderPosition.BEFOREEND);
 
-    this._renderExtraCards()
+    this._renderExtraCards();
   }
 
   // Метод рендеринга карточек фильмов в Top Rated и Most Commented
-  _renderExtraCards () {
+  _renderExtraCards() {
     const filmListExtra = this._documentBodyContainer.querySelectorAll(`.films-list--extra`);
 
     filmListExtra.forEach((element) => {
       for (let i = 0; i < CARDS_IN_BLOCK_COUNT; i++) {
-        this._filmCardComponent = new Card(this._cardListComponent[i]);
-        this._createCard(element.querySelector(`.films-list__container`), this._filmCardComponent);
+        const filmCardComponent = new Card(this._cardListComponent[i]);
+        renderElement(element.querySelector(`.films-list__container`), filmCardComponent, RenderPosition.BEFOREEND);
       }
     });
   }
 }
-
