@@ -4,4 +4,4 @@ export const sortRating = (cardA, cardB) => {
 
 export const sortDate = (cardA, cardB) => {
   return cardB.date - cardA.date;
-}
+};

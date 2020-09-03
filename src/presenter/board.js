@@ -62,7 +62,7 @@ export default class Board {
 
     this._renderSortMenu();
   }
-  
+
   // Метод сортировки карточек по дате и рейтингу
   _sortTasks(sortType) {
     switch (sortType) {
