@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import Abstract from "./abstract.js";
 
 const createFilmCardTemplate = (card) => {
   const addToWachlistClassName = card.isAddedInWachlist
@@ -35,25 +35,25 @@ const createFilmCardTemplate = (card) => {
 };
 
 
-export default class Card {
+export default class Card extends Abstract {
   constructor(card) {
+    super();
     this.card = card;
-    this._element = null;
+
+    this._showPopupHandler = this._showPopupHandler.bind(this);
   }
 
   getTemplate() {
     return createFilmCardTemplate(this.card);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _showPopupHandler(evt) {
+    evt.preventDefault();
+    this._callback.editClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setShowPopupHandler(callback) {
+    this._callback.editClick = callback;
+    this.getElement().addEventListener(`click`, this._showPopupHandler);
   }
 }

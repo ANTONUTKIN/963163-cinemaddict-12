@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import Abstract from "./abstract.js";
 
 const createDetailsPopupTemplate = (card) => {
   return (
@@ -171,26 +171,26 @@ const createDetailsPopupTemplate = (card) => {
   );
 };
 
-export default class CardPopup {
+export default class CardPopup extends Abstract {
   constructor(card) {
+    super();
     this.card = card;
-    this._element = null;
+
+    this._closePopupHandler = this._closePopupHandler.bind(this);
   }
 
   getTemplate() {
     return createDetailsPopupTemplate(this.card);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _closePopupHandler(evt) {
+    evt.preventDefault();
+    this._callback.editClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setClosePopupHandler(callback) {
+    this._callback.editClick = callback;
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closePopupHandler);
   }
 }
 

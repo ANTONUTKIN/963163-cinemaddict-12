@@ -1,9 +1,20 @@
+import Abstract from "../view/abstract.js";
+
 export const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
   BEFOREEND: `beforeend`
 };
 
 export const renderElement = (container, element, place) => {
+  if (container instanceof Abstract) {
+    container = container.getElement();
+  }
+
+  if (element instanceof Abstract) {
+    element = element.getElement();
+  }
+
+
   switch (place) {
     case RenderPosition.AFTERBEGIN:
       container.prepend(element);
@@ -25,10 +36,7 @@ export const createElement = (template) => {
   return newElement.firstChild;
 };
 
-// Функция генератор случайных значений
-export const getRandomInteger = (a = 0, b = 1) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-
-  return Math.floor(lower + Math.random() * (upper - lower + 1));
+export const removeElement = (element) => {
+  element.getElement().remove();
+  element.removeElement();
 };
