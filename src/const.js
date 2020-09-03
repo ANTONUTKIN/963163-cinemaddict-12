@@ -20,3 +20,9 @@ export const DATA = {
   MAX_WRITERS: 3,
   MIN_ACTORS: 2
 };
+
+export const SortType = {
+  DEFAULT: `default`,
+  DATE_SORT: `date`,
+  RATING_SORT: `rating`
+};
