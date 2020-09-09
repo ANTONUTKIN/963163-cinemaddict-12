@@ -1,11 +1,12 @@
 import CardView from "../view/film-card.js";
 import CardPopupView from "../view/popup-card.js";
-import {renderElement, RenderPosition, removeElement} from "../utils/render.js";
+import {renderElement, RenderPosition, removeElement, replace} from "../utils/render.js";
 
 export default class Card {
   constructor(cardBoardElement, documentBodyContainer) {
     this._cardBoardElement = cardBoardElement;
     this._documentBodyContainer = documentBodyContainer;
+    this._cardPresenter = {};
 
     this._cardComponent = null;
     this._popupComponent = null;
@@ -18,13 +19,35 @@ export default class Card {
   init(content) {
     this._content = content;
 
+    const prevCardComponent = this._cardComponent;
+    const prevPopupComponent = this._popupComponentt;
+
     this._cardComponent = new CardView(content);
     this._popupComponent = new CardPopupView(content);
 
     this._cardComponent.setShowPopupHandler(this._handlePopupClick);
     this._popupComponent.setClosePopupHandler(this._closePopupHandler);
 
-    renderElement(this._cardBoardElement, this._cardComponent, RenderPosition.BEFOREEND);
+    if (prevCardComponent === null || prevPopupComponent === null) {
+      renderElement(this._cardBoardElement, this._cardComponent, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    if (this._cardBoardElement.getElement().contains(prevCardComponent.getElement())) {
+      replace(this._cardComponent, prevCardComponent);
+    }
+
+    if (this._cardBoardElement.getElement().contains(prevPopupComponent.getElement())) {
+      replace(this._prevPopupComponent, prevPopupComponent);
+    }
+
+    removeElement(prevCardComponent);
+    removeElement(prevPopupComponent);
+  }
+
+  destroy() {
+    removeElement(this._cardComponent);
+    removeElement(this._popupComponent);
   }
 
   _onEscKeyDown(evt) {

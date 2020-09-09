@@ -1,6 +1,7 @@
 import {getRandomInteger} from "../utils/common.js";
 import {DATA} from "../const.js";
 
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
 const generateFilmName = () => {
   const filmName = [
@@ -274,6 +275,7 @@ const generatePopupDiscription = () => {
 
 export const generateCard = () => {
   return {
+    id: generateId(),
     filmName: generateFilmName(),
     poster: generatePosterAdress(),
     discription: generateDiscription(),
