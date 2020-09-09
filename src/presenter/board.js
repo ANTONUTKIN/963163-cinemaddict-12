@@ -5,10 +5,10 @@ import StatsFilter from "../view/stats-filters.js";
 import CardBoard from "../view/card-board.js";
 import NoData from "../view/no-data.js";
 import Card from "../view/film-card.js";
-import CardPopup from "../view/popup-card.js";
 import ShowMore from "../view/load-more-button.js";
 import TopRatedContainer from "../view/top-rated.js";
 import MostCommentedContainer from "../view/most-commented.js";
+import CardPresenter from "../presenter/card.js";
 import {generateFilters} from "../mock/filters.js";
 import {generateCard} from "../mock/card.js";
 import {renderElement, RenderPosition, removeElement} from "../utils/render.js";
@@ -107,27 +107,9 @@ export default class Board {
   }
 
   // Метод создания карточек фильмов
-  _createCard(cardListElement, content) {
-    const filmCardComponent = new Card(content);
-    const filmPopupComponent = new CardPopup(content);
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        evt.preventDefault();
-        removeElement(filmPopupComponent);
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
-    renderElement(cardListElement, filmCardComponent, RenderPosition.BEFOREEND);
-    filmCardComponent.setShowPopupHandler(() => {
-      renderElement(this._documentBodyContainer, filmPopupComponent, RenderPosition.BEFOREEND);
-      document.addEventListener(`keydown`, onEscKeyDown);
-      filmPopupComponent.setClosePopupHandler(() => {
-        removeElement(filmPopupComponent);
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      });
-    });
+  _createCard(cardBoardElement, content) {
+    this.CardPresenter = new CardPresenter(cardBoardElement, this._documentBodyContainer);
+    this.CardPresenter.init(content);
   }
 
   // Метод рендеринга карточек фильмов
