@@ -3,15 +3,18 @@ import CardPopupView from "../view/popup-card.js";
 import {renderElement, RenderPosition, removeElement, replace} from "../utils/render.js";
 
 export default class Card {
-  constructor(cardBoardElement, documentBodyContainer) {
+  constructor(cardBoardElement, documentBodyContainer, changeData) {
     this._cardBoardElement = cardBoardElement;
     this._documentBodyContainer = documentBodyContainer;
-    this._cardPresenter = {};
+    this._changeData = changeData;
 
     this._cardComponent = null;
     this._popupComponent = null;
 
     this._handlePopupClick = this._handlePopupClick.bind(this);
+    this._handleWatchlistClick = this._handleWatchlistClick.bind(this);
+    this._handleWatchedClick = this._handleWatchedClick.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._closePopupHandler = this._closePopupHandler.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
@@ -32,7 +35,7 @@ export default class Card {
       renderElement(this._cardBoardElement, this._cardComponent, RenderPosition.BEFOREEND);
       return;
     }
-
+    
     if (this._cardBoardElement.getElement().contains(prevCardComponent.getElement())) {
       replace(this._cardComponent, prevCardComponent);
     }
@@ -61,6 +64,42 @@ export default class Card {
   _handlePopupClick() {
     renderElement(this._documentBodyContainer, this._popupComponent, RenderPosition.BEFOREEND);
     document.addEventListener(`keydown`, this._onEscKeyDown);
+  }
+
+  _handleWatchlistClick() {
+    this._changeData(
+        Object.assign(
+            {},
+            this._card,
+            {
+              isFavorite: !this._card.isFavorite
+            }
+        )
+    );
+  }
+
+  _handleWatchedClick() {
+    this._changeData(
+        Object.assign(
+            {},
+            this._card,
+            {
+              isWatched: !this._card.isWatched
+            }
+        )
+    );
+  }
+
+  _handleFavoriteClick() {
+    this._changeData(
+        Object.assign(
+            {},
+            this._card,
+            {
+              isFavorite: !this._card.isFavorite
+            }
+        )
+    );
   }
 
   _closePopupHandler() {

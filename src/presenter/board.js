@@ -122,7 +122,7 @@ export default class Board {
 
   // Метод создания карточек фильмов
   _createCard(cardBoardElement, content) {
-    this.CardPresenter = new CardPresenter(cardBoardElement, this._documentBodyContainer);
+    this.CardPresenter = new CardPresenter(cardBoardElement, this._documentBodyContainer, this._handleCardChange);
     this.CardPresenter.init(content);
     this._CardPresenter[content.id] = this.CardPresenter;
   }

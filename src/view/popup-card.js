@@ -1,6 +1,22 @@
-import Abstract from "./abstract.js";
+import SmartVieww from "./smart.js";
 
-const createDetailsPopupTemplate = (card) => {
+
+const createDetailsPopupTemplate = (card, option) => {
+  const {poster, age, filmName, rating, director, writers, actors, datePopup, duration, country, genrePopup, discriptionPopup} = card;
+  const {isAddedInWachlist, isWatched, isFavorite} = option;
+
+  const watchlistChecker = isAddedInWachlist
+    ? `checked`
+    : ``;
+
+    const alreadyWatchedChecker = isWatched
+    ? `checked`
+    : ``;
+
+    const toFavoriteChecker = isFavorite
+    ? `checked`
+    : ``;
+
   return (
     `<section class="film-details">
       <form class="film-details__inner" action="" method="get">
@@ -10,68 +26,68 @@ const createDetailsPopupTemplate = (card) => {
           </div>
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
-              <img class="film-details__poster-img" ${card.poster} alt="">
+              <img class="film-details__poster-img" ${poster} alt="">
     
-              <p class="film-details__age">${card.age}+</p>
+              <p class="film-details__age">${age}+</p>
             </div>
     
             <div class="film-details__info">
               <div class="film-details__info-head">
                 <div class="film-details__title-wrap">
-                  <h3 class="film-details__title">${card.filmName}</h3>
-                  <p class="film-details__title-original">Original: ${card.filmName}</p>
+                  <h3 class="film-details__title">${filmName}</h3>
+                  <p class="film-details__title-original">Original: ${filmName}</p>
                 </div>
     
                 <div class="film-details__rating">
-                  <p class="film-details__total-rating">${card.rating}</p>
+                  <p class="film-details__total-rating">${rating}</p>
                 </div>
               </div>
     
               <table class="film-details__table">
                 <tr class="film-details__row">
                   <td class="film-details__term">Director</td>
-                  <td class="film-details__cell">${card.director}</td>
+                  <td class="film-details__cell">${director}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Writers</td>
-                  <td class="film-details__cell">${card.writers}</td>
+                  <td class="film-details__cell">${writers}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Actors</td>
-                  <td class="film-details__cell">${card.actors}</td>
+                  <td class="film-details__cell">${actors}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">${card.datePopup}</td>
+                  <td class="film-details__cell">${datePopup}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${card.duration}</td>
+                  <td class="film-details__cell">${duration}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>
-                  <td class="film-details__cell">${card.country}</td>
+                  <td class="film-details__cell">${country}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Genres</td>
-                  <td class="film-details__cell">${card.genrePopup}</td>                  
+                  <td class="film-details__cell">${genrePopup}</td>                  
                 </tr>
               </table>
     
               <p class="film-details__film-description">
-                ${card.discriptionPopup}
+                ${discriptionPopup}
               </p>
             </div>
           </div>
     
           <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${watchlistChecker}>
             <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
     
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${alreadyWatchedChecker}>
             <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
     
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${toFavoriteChecker}>
             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
           </section>
         </div>
@@ -171,25 +187,73 @@ const createDetailsPopupTemplate = (card) => {
   );
 };
 
-export default class CardPopup extends Abstract {
+export default class CardPopup extends SmartVieww {
   constructor(card) {
     super();
     this.card = card;
+    this._option = {
+      isAddedInWachlist: Boolean(this.card.isAddedInWachlist),
+      isWatched: Boolean(this.card.isWatched),
+      isFavorite: Boolean(this.card.isFavorite)
+    };
 
     this._closePopupHandler = this._closePopupHandler.bind(this);
+
+    this._enableAddToWatchedToggler();
+    this._enableIsWatchedToggler();
+    this._enableIsFavoriteToggler();
   }
 
   getTemplate() {
-    return createDetailsPopupTemplate(this.card);
+    return createDetailsPopupTemplate(this.card, this._option);
+  }
+
+  _enableAddToWatchedToggler() {
+    const element = this.getElement();
+    const addToWatchedToggleHandler = () => {
+      this._option.isAddedInWachlist = !this._option.isAddedInWachlist;
+      element
+        .querySelector(`.film-details__control-label--watchlist`)
+        .addEventListener(`click`, addToWatchedToggleHandler);
+    }
+    element
+      .querySelector(`.film-details__control-label--watchlist`)
+      .addEventListener(`click`, addToWatchedToggleHandler);
+  }
+
+  _enableIsWatchedToggler() {
+    const element = this.getElement();
+    const isWatchedToggleHandler = () => {
+      this._option.isWatched = !this._option.isWatched;
+      element
+        .querySelector(`.film-details__control-label--watched`)
+        .addEventListener(`click`, isWatchedToggleHandler);
+    }
+    element
+      .querySelector(`.film-details__control-label--watched`)
+      .addEventListener(`click`, isWatchedToggleHandler);
+  }
+
+  _enableIsFavoriteToggler() {
+    const element = this.getElement();
+    const isFavoriteToggleHandler = () => {
+      this._option.isFavorite = !this._option.isFavorite;
+      element
+        .querySelector(`.film-details__control-label--favorite`)
+        .addEventListener(`click`, isFavoriteToggleHandler);
+    }
+    element
+      .querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, isFavoriteToggleHandler);
   }
 
   _closePopupHandler(evt) {
     evt.preventDefault();
-    this._callback.editClick();
+    this._callback.popupClick();
   }
 
   setClosePopupHandler(callback) {
-    this._callback.editClick = callback;
+    this._callback.popupClick = callback;
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closePopupHandler);
   }
 }
