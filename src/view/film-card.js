@@ -1,4 +1,4 @@
-import Abstract from "./abstract.js";
+import SmartView from "./smart.js";
 
 const createFilmCardTemplate = (card) => {
   const addToWachlistClassName = card.isAddedInWachlist
@@ -35,17 +35,15 @@ const createFilmCardTemplate = (card) => {
 };
 
 
-export default class Card extends Abstract {
+export default class Card extends SmartView {
   constructor(card) {
     super();
     this.card = card;
 
     this._showPopupHandler = this._showPopupHandler.bind(this);
-    /*this._toWatchlistHandler = this._toWatchlistHandler.bind(this);
+    this._toWatchlistHandler = this._toWatchlistHandler.bind(this);
     this._alreadyWatchedHandler = this._alreadyWatchedHandler.bind(this);
     this._addToFavoritsHandler = this._addToFavoritsHandler.bind(this);
-    Пока оставил в коде до вяснения ТЗ. Если это с главного меню конпки должны быть интерактивными - 
-    добавим обработчики, если же они интерактивны только из меню с подробной информацией о фильме - удалим*/
   }
 
   getTemplate() {
@@ -57,11 +55,11 @@ export default class Card extends Abstract {
     this._callback.popupClick();
   }
 
-  /*_toWatchlistHandler(evt) {
+  _toWatchlistHandler(evt) {
     evt.preventDefault();
     this._callback.watchlistClick();
   }
-
+ 
   _alreadyWatchedHandler(evt) {
     evt.preventDefault();
     this._callback.watchedClick();
@@ -70,14 +68,14 @@ export default class Card extends Abstract {
   _addToFavoritsHandler(evt) {
     evt.preventDefault();
     this._callback.favoritsClick();
-  }*/
+  }
 
   setShowPopupHandler(callback) {
     this._callback.popupClick = callback;
-    this.getElement().addEventListener(`click`, this._showPopupHandler);
+    this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, this._showPopupHandler);
   }
 
-  /*setAddToWatchlistHandler(callback) {
+  setAddToWatchlistHandler(callback) {
     this._callback.watchlistClick = callback;
     this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).addEventListener(`click`, this._toWatchlistHandler);
   }
@@ -89,6 +87,6 @@ export default class Card extends Abstract {
 
   setAddToFavoritsHandler(callback) {
     this._callback.favoritsClick = callback;
-    this.getElement().querySelector(`.button film-card__controls-item--favorite`).addEventListener(`click`, this._addToFavoritsHandler);
-  }*/
+    this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, this._addToFavoritsHandler);
+  }
 }

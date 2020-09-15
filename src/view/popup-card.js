@@ -1,4 +1,4 @@
-import SmartVieww from "./smart.js";
+import SmartView from "./smart.js";
 
 
 const createDetailsPopupTemplate = (card, option) => {
@@ -187,7 +187,7 @@ const createDetailsPopupTemplate = (card, option) => {
   );
 };
 
-export default class CardPopup extends SmartVieww {
+export default class CardPopup extends SmartView {
   constructor(card) {
     super();
     this.card = card;
@@ -199,13 +199,27 @@ export default class CardPopup extends SmartVieww {
 
     this._closePopupHandler = this._closePopupHandler.bind(this);
 
-    this._enableAddToWatchedToggler();
-    this._enableIsWatchedToggler();
-    this._enableIsFavoriteToggler();
+    this._enableAddToWatchedToggler = this._enableAddToWatchedToggler.bind(this);
+    this._enableIsWatchedToggler = this._enableIsWatchedToggler.bind(this);
+    this._enableIsFavoriteToggler = this._enableIsWatchedToggler.bind(this);
   }
 
   getTemplate() {
     return createDetailsPopupTemplate(this.card, this._option);
+  }
+
+  updateData(update) {
+    if (!update) {
+      return;
+    }
+
+    this._card = Object.assign(
+        {},
+        this._card,
+        update
+    );
+
+    this.updateElement();
   }
 
   _enableAddToWatchedToggler() {

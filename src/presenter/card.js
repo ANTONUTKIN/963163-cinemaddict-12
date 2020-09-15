@@ -30,17 +30,21 @@ export default class Card {
 
     this._cardComponent.setShowPopupHandler(this._handlePopupClick);
     this._popupComponent.setClosePopupHandler(this._closePopupHandler);
+    this._cardComponent.setAddToWatchlistHandler(this._handleWatchlistClick);
+    this._cardComponent.setAlreadyWatchedHandler(this._handleWatchedClick);
+    this._cardComponent.setAddToFavoritsHandler(this._handleFavoriteClick);
+    this._popupComponent.isWatchedToggleHandler(this._handleWatchlistClick);
 
     if (prevCardComponent === null || prevPopupComponent === null) {
       renderElement(this._cardBoardElement, this._cardComponent, RenderPosition.BEFOREEND);
       return;
     }
     
-    if (this._cardBoardElement.getElement().contains(prevCardComponent.getElement())) {
+    if (this._cardBoardElement.contains(prevCardComponent.getElement())) {
       replace(this._cardComponent, prevCardComponent);
     }
 
-    if (this._cardBoardElement.getElement().contains(prevPopupComponent.getElement())) {
+    if (this._cardBoardElement.contains(prevPopupComponent.getElement())) {
       replace(this._prevPopupComponent, prevPopupComponent);
     }
 
@@ -67,12 +71,13 @@ export default class Card {
   }
 
   _handleWatchlistClick() {
+    console.log(this)
     this._changeData(
         Object.assign(
             {},
-            this._card,
+            this._content,
             {
-              isFavorite: !this._card.isFavorite
+              isAddedInWachlist: !this._content.isAddedInWachlist
             }
         )
     );
@@ -82,9 +87,9 @@ export default class Card {
     this._changeData(
         Object.assign(
             {},
-            this._card,
+            this._content,
             {
-              isWatched: !this._card.isWatched
+              isWatched: !this._content.isWatched
             }
         )
     );
@@ -94,9 +99,9 @@ export default class Card {
     this._changeData(
         Object.assign(
             {},
-            this._card,
+            this._content,
             {
-              isFavorite: !this._card.isFavorite
+              isFavorite: !this._content.isFavorite
             }
         )
     );
