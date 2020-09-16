@@ -193,12 +193,11 @@ export default class CardPopup extends SmartView {
 
     this._closePopupHandler = this._closePopupHandler.bind(this);
 
-    this._addToWatchedToggleHandler = this._addToWatchedToggleHandler.bind(this);
-    this._isWatchedToggleHandler = this._isWatchedToggleHandler.bind(this);
-    this._favotiteToggleHandler = this._favotiteToggleHandler.bind(this);
+    this._toWatchlistHandler = this._toWatchlistHandler.bind(this);
+    this._alreadyWatchedHandler = this._alreadyWatchedHandler.bind(this);
+    this._addToFavoritsHandler = this._addToFavoritsHandler.bind(this);
 
-    this._setInnerHandlers();
-
+    //this._setInnerHandlers();
   }
 
   getTemplate() {
@@ -219,7 +218,7 @@ export default class CardPopup extends SmartView {
     this.updateElement();
   }
 
-  _addToWatchedToggleHandler(evt) {
+  /*_addToWatchedToggleHandler(evt) {
     evt.preventDefault();
     this.updateData({
       isAddedInWachlist: !this._card.isAddedInWachlist
@@ -250,6 +249,36 @@ export default class CardPopup extends SmartView {
     this.getElement()
       .querySelector(`.film-details__control-label--favorite`)
       .addEventListener(`click`, this._favotiteToggleHandler);
+  }*/
+
+  _toWatchlistHandler(evt) {
+    evt.preventDefault();
+    this._callback.watchlistClick();
+  }
+ 
+  _alreadyWatchedHandler(evt) {
+    evt.preventDefault();
+    this._callback.watchedClick();
+  }
+
+  _addToFavoritsHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoritsClick();
+  }
+
+  setAddToWatchlistHandler(callback) {
+    this._callback.watchlistClick = callback;
+    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, this._toWatchlistHandler);
+  }
+
+  setAlreadyWatchedHandler(callback) {
+    this._callback.watchedClick = callback;
+    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, this._alreadyWatchedHandler);
+  }
+
+  setAddToFavoritsHandler(callback) {
+    this._callback.favoritsClick = callback;
+    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._addToFavoritsHandler);
   }
 
   restoreHandlers() {

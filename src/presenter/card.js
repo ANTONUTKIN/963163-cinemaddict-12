@@ -23,7 +23,7 @@ export default class Card {
     this._content = content;
 
     const prevCardComponent = this._cardComponent;
-    const prevPopupComponent = this._popupComponentt;
+    const prevPopupComponent = this._popupComponent;
 
     this._cardComponent = new CardView(content);
     this._popupComponent = new CardPopupView(content);
@@ -33,6 +33,9 @@ export default class Card {
     this._cardComponent.setAddToWatchlistHandler(this._handleWatchlistClick);
     this._cardComponent.setAlreadyWatchedHandler(this._handleWatchedClick);
     this._cardComponent.setAddToFavoritsHandler(this._handleFavoriteClick);
+    this._popupComponent.setAddToWatchlistHandler(this._handleWatchlistClick);
+    this._popupComponent.setAlreadyWatchedHandler(this._handleWatchedClick);
+    this._popupComponent.setAddToFavoritsHandler(this._handleFavoriteClick);
 
     if (prevCardComponent === null || prevPopupComponent === null) {
       renderElement(this._cardBoardElement, this._cardComponent, RenderPosition.BEFOREEND);
@@ -43,8 +46,8 @@ export default class Card {
       replace(this._cardComponent, prevCardComponent);
     }
 
-    if (this._cardBoardElement.contains(prevPopupComponent.getElement())) {
-      replace(this._prevPopupComponent, prevPopupComponent);
+    if (this._documentBodyContainer.contains(prevPopupComponent.getElement())) {
+      replace(this._popupComponent, prevPopupComponent);
     }
 
     removeElement(prevCardComponent);
