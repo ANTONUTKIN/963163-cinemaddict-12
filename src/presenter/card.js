@@ -41,7 +41,7 @@ export default class Card {
       renderElement(this._cardBoardElement, this._cardComponent, RenderPosition.BEFOREEND);
       return;
     }
-    
+
     if (this._cardBoardElement.contains(prevCardComponent.getElement())) {
       replace(this._cardComponent, prevCardComponent);
     }
@@ -70,10 +70,13 @@ export default class Card {
   _handlePopupClick() {
     renderElement(this._documentBodyContainer, this._popupComponent, RenderPosition.BEFOREEND);
     document.addEventListener(`keydown`, this._onEscKeyDown);
+    this._popupComponent.setClosePopupHandler(this._closePopupHandler);
+    this._popupComponent.setAddToWatchlistHandler(this._handleWatchlistClick);
+    this._popupComponent.setAlreadyWatchedHandler(this._handleWatchedClick);
+    this._popupComponent.setAddToFavoritsHandler(this._handleFavoriteClick);
   }
 
   _handleWatchlistClick() {
-    console.log(this)
     this._changeData(
         Object.assign(
             {},

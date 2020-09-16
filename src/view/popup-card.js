@@ -8,11 +8,11 @@ const createDetailsPopupTemplate = (card) => {
     ? `checked`
     : ``;
 
-    const alreadyWatchedChecker = isWatched
+  const alreadyWatchedChecker = isWatched
     ? `checked`
     : ``;
 
-    const toFavoriteChecker = isFavorite
+  const toFavoriteChecker = isFavorite
     ? `checked`
     : ``;
 
@@ -196,8 +196,6 @@ export default class CardPopup extends SmartView {
     this._toWatchlistHandler = this._toWatchlistHandler.bind(this);
     this._alreadyWatchedHandler = this._alreadyWatchedHandler.bind(this);
     this._addToFavoritsHandler = this._addToFavoritsHandler.bind(this);
-
-    //this._setInnerHandlers();
   }
 
   getTemplate() {
@@ -218,44 +216,11 @@ export default class CardPopup extends SmartView {
     this.updateElement();
   }
 
-  /*_addToWatchedToggleHandler(evt) {
-    evt.preventDefault();
-    this.updateData({
-      isAddedInWachlist: !this._card.isAddedInWachlist
-    });
-  }
-
-  _isWatchedToggleHandler(evt) {
-    evt.preventDefault();
-    this.updateData({
-      isWatched: !this._card.isWatched
-    });
-  }
-
-  _favotiteToggleHandler(evt) {
-    evt.preventDefault();
-    this.updateData({
-      isFavorite: !this._card.isFavorite
-    });
-  }
-
-  _setInnerHandlers() {
-    this.getElement()
-      .querySelector(`.film-details__control-label--watchlist`)
-      .addEventListener(`click`, this._addToWatchedToggleHandler);
-    this.getElement()
-      .querySelector(`.film-details__control-label--watched`)
-      .addEventListener(`click`, this._isWatchedToggleHandler);
-    this.getElement()
-      .querySelector(`.film-details__control-label--favorite`)
-      .addEventListener(`click`, this._favotiteToggleHandler);
-  }*/
-
   _toWatchlistHandler(evt) {
     evt.preventDefault();
     this._callback.watchlistClick();
   }
- 
+
   _alreadyWatchedHandler(evt) {
     evt.preventDefault();
     this._callback.watchedClick();

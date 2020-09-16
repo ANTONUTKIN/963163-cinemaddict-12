@@ -34,7 +34,6 @@ const createFilmCardTemplate = (card) => {
   );
 };
 
-
 export default class Card extends SmartView {
   constructor(card) {
     super();
@@ -59,7 +58,7 @@ export default class Card extends SmartView {
     evt.preventDefault();
     this._callback.watchlistClick();
   }
- 
+
   _alreadyWatchedHandler(evt) {
     evt.preventDefault();
     this._callback.watchedClick();
