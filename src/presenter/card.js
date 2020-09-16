@@ -33,7 +33,6 @@ export default class Card {
     this._cardComponent.setAddToWatchlistHandler(this._handleWatchlistClick);
     this._cardComponent.setAlreadyWatchedHandler(this._handleWatchedClick);
     this._cardComponent.setAddToFavoritsHandler(this._handleFavoriteClick);
-    this._popupComponent.isWatchedToggleHandler(this._handleWatchlistClick);
 
     if (prevCardComponent === null || prevPopupComponent === null) {
       renderElement(this._cardBoardElement, this._cardComponent, RenderPosition.BEFOREEND);
