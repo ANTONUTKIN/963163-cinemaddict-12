@@ -1,3 +1,5 @@
+import moment from "moment";
+
 // Функция - генератор случайных значений
 export const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -6,6 +8,7 @@ export const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
+// Функция обновления списка
 export const updateItem = (items, update) => {
   const index = items.findIndex((item) => item.id === update.id);
 
@@ -18,4 +21,8 @@ export const updateItem = (items, update) => {
     update,
     ...items.slice(index + 1)
   ];
+};
+
+export const filmReleaseDate = (dueDate) => {
+  return moment(dueDate).format(`D MMMM YYYY`);
 };
