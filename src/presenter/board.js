@@ -5,14 +5,15 @@ import StatsFilter from "../view/stats-filters.js";
 import CardBoard from "../view/card-board.js";
 import NoData from "../view/no-data.js";
 import Card from "../view/film-card.js";
-import CardPopup from "../view/popup-card.js";
 import ShowMore from "../view/load-more-button.js";
 import TopRatedContainer from "../view/top-rated.js";
 import MostCommentedContainer from "../view/most-commented.js";
+import CardPresenter from "../presenter/card.js";
 import {generateFilters} from "../mock/filters.js";
 import {generateCard} from "../mock/card.js";
 import {renderElement, RenderPosition, removeElement} from "../utils/render.js";
 import {sortRating, sortDate} from "../utils/sort.js";
+import {updateItem} from "../utils/common.js";
 import {SortType} from "../const.js";
 
 const CARDS_COUNT = 21;
@@ -25,6 +26,7 @@ export default class Board {
     this._boardContainer = boardContainer;
     this._headerContainer = headerContainer;
     this._currentSortType = SortType.DEFAULT;
+    this._CardPresenter = {};
 
     this._cardsArray = new Array(CARDS_COUNT).fill().map(generateCard);
     this._profileComponent = new ProfileRating();
@@ -35,17 +37,27 @@ export default class Board {
     this._showMoreComponent = new ShowMore();
     this._topRatedComponent = new TopRatedContainer();
     this._mostViewedComponent = new MostCommentedContainer();
+
+    this._handleCardChange = this._handleCardChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
   // Метод инициализации модуля
   init() {
+    this._cardsArray = this._cardsArray.slice();
     this._cardsArrayInit = this._cardsArray.slice();
     this._renderIcon();
     this._renderStats();
     this._renderCardBoard();
     this._renderExtraContainers();
+  }
 
+
+  // Обработчик изменения данных карточки фильма
+  _handleCardChange(updatedCard) {
+    this._cardsArray = updateItem(this._cardsArray, updatedCard);
+    this._cardsArrayInit = updateItem(this._cardsArrayInit, updatedCard);
+    this._CardPresenter[updatedCard.id].init(updatedCard);
   }
 
   // Метод рендеринга иконки профиля
@@ -79,6 +91,7 @@ export default class Board {
     this._currentSortType = sortType;
   }
 
+  // Обработчик кнопок сортировки
   _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
       return;
@@ -89,6 +102,7 @@ export default class Board {
     this._renderCard();
   }
 
+  // Метод сортировки карточек фильмов
   _renderSortMenu() {
     renderElement(this._boardContainer, this._sortListComponent, RenderPosition.BEFOREEND);
     this._sortListComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
@@ -107,27 +121,10 @@ export default class Board {
   }
 
   // Метод создания карточек фильмов
-  _createCard(cardListElement, content) {
-    const filmCardComponent = new Card(content);
-    const filmPopupComponent = new CardPopup(content);
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        evt.preventDefault();
-        removeElement(filmPopupComponent);
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
-    renderElement(cardListElement, filmCardComponent, RenderPosition.BEFOREEND);
-    filmCardComponent.setShowPopupHandler(() => {
-      renderElement(this._documentBodyContainer, filmPopupComponent, RenderPosition.BEFOREEND);
-      document.addEventListener(`keydown`, onEscKeyDown);
-      filmPopupComponent.setClosePopupHandler(() => {
-        removeElement(filmPopupComponent);
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      });
-    });
+  _createCard(cardBoardElement, content) {
+    this.CardPresenter = new CardPresenter(cardBoardElement, this._documentBodyContainer, this._handleCardChange);
+    this.CardPresenter.init(content);
+    this._CardPresenter[content.id] = this.CardPresenter;
   }
 
   // Метод рендеринга карточек фильмов
@@ -179,5 +176,14 @@ export default class Board {
         renderElement(element.querySelector(`.films-list__container`), filmCardComponent, RenderPosition.BEFOREEND);
       }
     });
+  }
+
+  // Метод очищения списка карточек фильмов
+  _clearCardsList() {
+    Object
+      .values(this._CardPresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._CardPresenter = {};
+    this._renderedTaskCount = TASK_COUNT_PER_STEP;
   }
 }
