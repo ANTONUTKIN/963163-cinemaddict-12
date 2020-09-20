@@ -10,10 +10,9 @@ import TopRatedContainer from "../view/top-rated.js";
 import MostCommentedContainer from "../view/most-commented.js";
 import CardPresenter from "../presenter/card.js";
 import {generateFilters} from "../mock/filters.js";
-import {generateCard} from "../mock/card.js";
 import {renderElement, RenderPosition, removeElement} from "../utils/render.js";
 import {sortRating, sortDate} from "../utils/sort.js";
-import {updateItem} from "../utils/common.js";
+// import {updateItem} from "../utils/common.js";
 import {SortType} from "../const.js";
 
 const CARDS_COUNT = 21;
@@ -21,14 +20,14 @@ const CARDS_IN_BLOCK_COUNT = 2;
 const TASK_COUNT_PER_STEP = 5;
 
 export default class Board {
-  constructor(boardContainer, headerContainer, documentBodyContainer) {
+  constructor(boardContainer, headerContainer, documentBodyContainer, cardsModel) {
     this._documentBodyContainer = documentBodyContainer;
     this._boardContainer = boardContainer;
     this._headerContainer = headerContainer;
+    this._cardsModel = cardsModel;
     this._currentSortType = SortType.DEFAULT;
     this._CardPresenter = {};
 
-    this._cardsArray = new Array(CARDS_COUNT).fill().map(generateCard);
     this._profileComponent = new ProfileRating();
     this._sortListComponent = new SortList();
     this._navBoardComponent = new NavBoard();
@@ -44,19 +43,28 @@ export default class Board {
 
   // Метод инициализации модуля
   init() {
-    this._cardsArray = this._cardsArray.slice();
-    this._cardsArrayInit = this._cardsArray.slice();
     this._renderIcon();
     this._renderStats();
     this._renderCardBoard();
     this._renderExtraContainers();
   }
 
+  // Метод отрисовки списка карточек фильмов из модели
+  _getMovies() {
+    switch (this._currentSortType) {
+      case SortType.DATE_SORT:
+        return this._cardsModel.getMovies().slice().sort(sortDate);
+      case SortType.RATING_SORT:
+        return this._cardsModel.getMovies().slice().sort(sortRating);
+    }
+    
+    return this._cardsModel.getMovies();
+  }
+
 
   // Обработчик изменения данных карточки фильма
   _handleCardChange(updatedCard) {
-    this._cardsArray = updateItem(this._cardsArray, updatedCard);
-    this._cardsArrayInit = updateItem(this._cardsArrayInit, updatedCard);
+    // Тут будет вызов обновления модели
     this._CardPresenter[updatedCard.id].init(updatedCard);
   }
 
@@ -67,7 +75,8 @@ export default class Board {
 
   // Метод рендеринга меню статистики и сортировки
   _renderStats() {
-    const filters = generateFilters(this._cardsArray);
+    const cardsData = this._getMovies();
+    const filters = generateFilters(cardsData);
     this._statsComponent = new StatsFilter(filters);
     renderElement(this._boardContainer, this._navBoardComponent, RenderPosition.BEFOREEND);
     renderElement(this._navBoardComponent, this._statsComponent, RenderPosition.AFTERBEGIN);
@@ -75,29 +84,12 @@ export default class Board {
     this._renderSortMenu();
   }
 
-  // Метод сортировки карточек по дате и рейтингу
-  _sortTasks(sortType) {
-    switch (sortType) {
-      case SortType.DATE_SORT:
-        this._cardsArray.sort(sortDate);
-        break;
-      case SortType.RATING_SORT:
-        this._cardsArray.sort(sortRating);
-        break;
-      default:
-        this._cardsArray = this._cardsArrayInit.slice();
-    }
-
-    this._currentSortType = sortType;
-  }
-
   // Обработчик кнопок сортировки
   _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
       return;
     }
-
-    this._sortTasks(sortType);
+    this._currentSortType = sortType;
     this._boardContainer.querySelector(`.films-list__container`).innerHTML = ``;
     this._renderCard();
   }
@@ -110,7 +102,8 @@ export default class Board {
 
   // Метод для рендеринга доски для карточек фильмов
   _renderCardBoard() {
-    if (this._cardsArray.length === 0) {
+    const cardsCount = this._getMovies().length;
+    if (cardsCount === 0) {
       renderElement(this._boardContainer, this._noFilmCardComponent, RenderPosition.BEFOREEND);
     } else {
       renderElement(this._boardContainer, this._cardBoardComponent, RenderPosition.BEFOREEND);
@@ -130,14 +123,16 @@ export default class Board {
   // Метод рендеринга карточек фильмов
   _renderCard() {
     const filmCardContainer = this._boardContainer.querySelector(`.films-list__container`);
-    for (let i = 0; i < Math.min(this._cardsArray.length, TASK_COUNT_PER_STEP); i++) {
-      this._createCard(filmCardContainer, this._cardsArray[i]);
+    const cardsData = this._getMovies();
+    for (let i = 0; i < Math.min(cardsData.length, TASK_COUNT_PER_STEP); i++) {
+      this._createCard(filmCardContainer, cardsData[i]);
     }
   }
 
   // Метод рендеринга кнопки допоказа карточек
   _renderShowMoreButton() {
-    if (this._cardsArray.length > TASK_COUNT_PER_STEP) {
+    const cardsData = this._getMovies();
+    if (cardsData.length > TASK_COUNT_PER_STEP) {
       let renderedTaskCount = TASK_COUNT_PER_STEP;
       const filmList = this._boardContainer.querySelector(`.films-list`);
       const filmCardContainer = this._boardContainer.querySelector(`.films-list__container`);
@@ -145,13 +140,13 @@ export default class Board {
       renderElement(filmList, this._showMoreComponent, RenderPosition.BEFOREEND);
 
       this._showMoreComponent.setClickHandler(() => {
-        this._cardsArray
+        cardsData
         .slice(renderedTaskCount, renderedTaskCount + TASK_COUNT_PER_STEP)
         .forEach((card) => this._createCard(filmCardContainer, card));
 
         renderedTaskCount += TASK_COUNT_PER_STEP;
 
-        if (renderedTaskCount >= this._cardsArray.length) {
+        if (renderedTaskCount >= cardsData.length) {
           removeElement(this._showMoreComponent);
         }
       });
@@ -171,8 +166,9 @@ export default class Board {
     const filmListExtra = this._documentBodyContainer.querySelectorAll(`.films-list--extra`);
 
     filmListExtra.forEach((element) => {
+      const cardsData = this._getMovies();
       for (let i = 0; i < CARDS_IN_BLOCK_COUNT; i++) {
-        const filmCardComponent = new Card(this._cardsArray[i]);
+        const filmCardComponent = new Card(cardsData[i]);
         renderElement(element.querySelector(`.films-list__container`), filmCardComponent, RenderPosition.BEFOREEND);
       }
     });
