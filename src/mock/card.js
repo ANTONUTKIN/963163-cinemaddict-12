@@ -273,13 +273,20 @@ const generatePopupDiscription = () => {
   return result;
 };
 
+const commentsArr = [
+  `Interesting setting and a good cast`,
+  `Booooooooooring`,
+  `Very very old. Meh`,
+  `Almost two hours? Seriously?`,
+];
+
 export const generateCard = () => {
   return {
     id: generateId(),
     filmName: generateFilmName(),
     poster: generatePosterAdress(),
     discription: generateDiscription(),
-    comments: generateCommentsNumber(),
+    commentsCount: generateCommentsNumber(),
     date: generateFilmDate(),
     genre: generateGenre(),
     duration: generateTime(),
@@ -295,5 +302,6 @@ export const generateCard = () => {
     datePopup: generateDate(),
     genrePopup: generatePopupGenre(),
     discriptionPopup: generatePopupDiscription(),
+    comments: commentsArr,
   };
 };

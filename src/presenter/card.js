@@ -1,6 +1,7 @@
 import CardView from "../view/film-card.js";
 import CardPopupView from "../view/popup-card.js";
 import {renderElement, RenderPosition, removeElement, replace} from "../utils/render.js";
+import {UserAction, UpdateType} from "../const.js";
 
 export default class Card {
   constructor(cardBoardElement, documentBodyContainer, changeData) {
@@ -78,37 +79,43 @@ export default class Card {
 
   _handleWatchlistClick() {
     this._changeData(
-        Object.assign(
-            {},
-            this._content,
-            {
-              isAddedInWachlist: !this._content.isAddedInWachlist
-            }
-        )
+      UserAction.UPDATE_CARD_LIST,
+      UpdateType.MINOR,
+      Object.assign(
+          {},
+          this._content,
+          {
+            isAddedInWachlist: !this._content.isAddedInWachlist
+          }
+      )
     );
   }
 
   _handleWatchedClick() {
     this._changeData(
-        Object.assign(
-            {},
-            this._content,
-            {
-              isWatched: !this._content.isWatched
-            }
-        )
+      UserAction.UPDATE_CARD_LIST,
+      UpdateType.MINOR,
+      Object.assign(
+          {},
+          this._content,
+          {
+            isWatched: !this._content.isWatched
+          }   
+      )
     );
   }
 
   _handleFavoriteClick() {
     this._changeData(
-        Object.assign(
-            {},
-            this._content,
-            {
-              isFavorite: !this._content.isFavorite
-            }
-        )
+      UserAction.UPDATE_CARD_LIST,
+      UpdateType.MINOR,
+      Object.assign(
+          {},
+          this._content,
+          {
+            isFavorite: !this._content.isFavorite
+          }
+      )
     );
   }
 

@@ -26,3 +26,15 @@ export const SortType = {
   DATE_SORT: `date`,
   RATING_SORT: `rating`
 };
+
+export const UpdateType = {
+  PATCH: `PATCH`,
+  MINOR: `MINOR`,
+  MAJOR: `MAJOR`
+};
+
+export const UserAction = {
+  UPDATE_CARD_LIST: `UPDATE_CARD_LIST`,
+  ADD_COMMENT: `ADD_COMMENT`,
+  DELETE_COMMENT: `DELETE_COMMENT`
+};
