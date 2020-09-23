@@ -1,35 +1,33 @@
 import ProfileRating from "../view/profile-rating.js";
 import SortList from "../view/sort.js";
 import NavBoard from "../view/nav-board.js";
-import StatsFilter from "../view/stats-filters.js";
 import CardBoard from "../view/card-board.js";
 import NoData from "../view/no-data.js";
 import Card from "../view/film-card.js";
 import ShowMore from "../view/load-more-button.js";
 import TopRatedContainer from "../view/top-rated.js";
 import MostCommentedContainer from "../view/most-commented.js";
-import CardPresenter from "../presenter/card.js";
-import {generateFilters} from "../mock/filters.js";
+import MoviePresenter from "./movie.js";
 import {renderElement, RenderPosition, removeElement} from "../utils/render.js";
 import {sortRating, sortDate} from "../utils/sort.js";
 import {SortType, UpdateType, UserAction} from "../const.js";
+import { filter } from "../utils/filter.js";
 
 const CARDS_IN_BLOCK_COUNT = 2;
-const TASK_COUNT_PER_STEP = 5;
+const MOVIES_COUNT_PER_STEP = 5;
 
-export default class Board {
-  constructor(boardContainer, headerContainer, documentBodyContainer, cardsModel) {
-    this._documentBodyContainer = documentBodyContainer;
+export default class MovieList {
+  constructor(boardContainer, moviesModel, filterModel) {
+    this._documentBodyContainer = document.body;
     this._boardContainer = boardContainer;
-    this._headerContainer = headerContainer;
-    this._cardsModel = cardsModel;
+    this._moviesModel = moviesModel;
+    this._filterModel = filterModel;
     this._currentSortType = SortType.DEFAULT;
-    this._cardPresenter = {};
+    this._moviePresenter = {};
 
     this._sortListComponent = null;
     this._showMoreComponent = null;
 
-    this._profileComponent = new ProfileRating();
     this._navBoardComponent = new NavBoard();
     this._cardBoardComponent = new CardBoard();
     this._noFilmCardComponent = new NoData();
@@ -40,40 +38,43 @@ export default class Board {
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
-    this._cardsModel.addObserver(this._handleModelEvent);
+    this._moviesModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   // Метод инициализации модуля
   init() {
-    this._renderIcon();
-    this._renderStats();
-    this._renderCardBoard();
-    this._renderExtraContainers();
+    this._renderMovieBoard();
+    //this._renderExtraContainers();
   }
 
   // Метод отрисовки списка карточек фильмов из модели
   _getMovies() {
+    const filterType = this._filterModel.getFilter();
+    const movies = this._moviesModel.getMovies();
+    const filteredMovies = filter[filterType](movies);
+    
     switch (this._currentSortType) {
       case SortType.DATE_SORT:
-        return this._cardsModel.getMovies().slice().sort(sortDate);
+        return filteredMovies.sort(sortDate);
       case SortType.RATING_SORT:
-        return this._cardsModel.getMovies().slice().sort(sortRating);
+        return filteredMovies.sort(sortRating);
     }
     
-    return this._cardsModel.getMovies();
+    return filteredMovies;
   }
 
   // Обработчик изменения отбражения
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_CARD_LIST:
-        this._cardsModel.updateCard(updateType, update);
+        this._moviesModel.updateCard(updateType, update);
         break;
       case UserAction.ADD_COMMENT:
-        this._cardsModel.addComment(updateType, update);
+        this._moviesModel.addComment(updateType, update);
         break;
       case UserAction.DELETE_COMMENT:
-        this._cardsModel.deleteComment(updateType, update);
+        this._moviesModel.deleteComment(updateType, update);
         break;
     }
   }
@@ -83,36 +84,21 @@ export default class Board {
     switch (updateType) {
       case UpdateType.PATCH:
         // - обновить часть списка (например добавить в просмотренные)
-        this._cardPresenter[data.id].init(data);
+        this._moviePresenter[data.id].init(data);
         break;
       case UpdateType.MINOR:
         this._clearCardsList();
-        this._renderCardBoard();
+        this._renderMovieBoard();
         // - обновить список (например, когда задача ушла в архив)
         break;
       case UpdateType.MAJOR:
-        this._clearCardsList({resetRenderedCardsCount = true, resetSortType = true} = {});
-        this._renderCardBoard();
+        this._clearCardsList({resetRenderedCardsCount: true, resetSortType: true});
+        this._renderMovieBoard();
         // - обновить всю доску (например, при переключении фильтра)
         break;
     }
   }
 
-  // Метод рендеринга иконки профиля
-  _renderIcon() {
-    renderElement(this._headerContainer, this._profileComponent, RenderPosition.BEFOREEND);
-  }
-
-  // Метод рендеринга меню статистики и сортировки
-  _renderStats() {
-    const cardsData = this._getMovies();
-    const filters = generateFilters(cardsData);
-    this._statsComponent = new StatsFilter(filters);
-    renderElement(this._boardContainer, this._navBoardComponent, RenderPosition.BEFOREEND);
-    renderElement(this._navBoardComponent, this._statsComponent, RenderPosition.AFTERBEGIN);
-
-    this._renderSortMenu();
-  }
 
   // Обработчик кнопок сортировки
   _handleSortTypeChange(sortType) {
@@ -121,8 +107,7 @@ export default class Board {
     }
     this._currentSortType = sortType;
     this. _clearCardsList({resetRenderedCardsCount: true});
-    this._renderCardBoard();
-    console.log(this._currentSortType)
+    this._renderMovieBoard();
   }
 
   // Метод сортировки карточек фильмов
@@ -137,32 +122,56 @@ export default class Board {
   }
 
   // Метод для рендеринга доски для карточек фильмов
-  _renderCardBoard() {
-    const cards  = this._getMovies();
-    const cardsCount = cards.length;
-    if (cardsCount === 0) {
-      renderElement(this._boardContainer, this._noFilmCardComponent, RenderPosition.BEFOREEND);
-    } else {
-      renderElement(this._boardContainer, this._cardBoardComponent, RenderPosition.BEFOREEND);
-    }
+  _renderMovieBoard() {
+    // const movies  = this._getMovies();
+    // const moviesCount = movies.length;
+    // if (moviesCount === 0) {
+    //   renderElement(this._boardContainer, this._noFilmCardComponent, RenderPosition.BEFOREEND);
+    // } else {
+    //   renderElement(this._boardContainer, this._cardBoardComponent, RenderPosition.BEFOREEND);
+    // }
+    this._renderMoviesList();
+    // this._renderSortMenu();
+    // this._renderCard();
+    //this._renderShowMoreButton();
+  }
 
-    this._renderSortMenu();
-    this._renderCard();
-    this._renderShowMoreButton();
+  _renderMoviesList() {
+    renderElement(this._boardContainer, this._cardBoardComponent, RenderPosition.BEFOREEND);
+    const movies = this._getMovies();
+    this._renderMovies(movies.slice(0, MOVIES_COUNT_PER_STEP));
+  } 
+
+  _renderMovies(movies) {
+    const moviesListContainer = this._cardBoardComponent.getElement().querySelector('.films-list__container');
+    movies.forEach((film) => this._renderMovie(film, moviesListContainer));
+  }
+
+
+  _renderMovie(movie, container) {
+    const moviePresenter = new MoviePresenter(
+      container,
+      this._handleViewAction,
+      this._handleModeChange,      
+      this._moviesModel,
+      //this._commentsModel,
+    );
+    moviePresenter.init(movie);
+    this._moviePresenter[movie.id] = moviePresenter;
   }
 
   // Метод создания карточек фильмов
   _createCard(cardBoardElement, content) {
-    this.CardPresenter = new CardPresenter(cardBoardElement, this._documentBodyContainer, this._handleViewAction);
-    this.CardPresenter.init(content);
-    this._cardPresenter[content.id] = this.CardPresenter;
+    this.MoviePresenter = new MoviePresenter(cardBoardElement, this._documentBodyContainer, this._handleViewAction);
+    this.MoviePresenter.init(content);
+    this._moviePresenter[content.id] = this.MoviePresenter;
   }
 
   // Метод рендеринга карточек фильмов
   _renderCard() {
     const filmCardContainer = this._boardContainer.querySelector(`.films-list__container`);
     const cardsData = this._getMovies();
-    for (let i = 0; i < Math.min(cardsData.length, TASK_COUNT_PER_STEP); i++) {
+    for (let i = 0; i < Math.min(cardsData.length, MOVIES_COUNT_PER_STEP); i++) {
       this._createCard(filmCardContainer, cardsData[i]);
     }
   }
@@ -176,8 +185,8 @@ export default class Board {
     this._showMoreComponent = new ShowMore();
 
     const cardsData = this._getMovies();
-    if (cardsData.length > TASK_COUNT_PER_STEP) {
-      let renderedTaskCount = TASK_COUNT_PER_STEP;
+    if (cardsData.length > MOVIES_COUNT_PER_STEP) {
+      let renderedTaskCount = MOVIES_COUNT_PER_STEP;
       const filmList = this._boardContainer.querySelector(`.films-list`);
       const filmCardContainer = this._boardContainer.querySelector(`.films-list__container`);
 
@@ -185,10 +194,10 @@ export default class Board {
 
       this._showMoreComponent.setClickHandler(() => {
         cardsData
-        .slice(renderedTaskCount, renderedTaskCount + TASK_COUNT_PER_STEP)
+        .slice(renderedTaskCount, renderedTaskCount + MOVIES_COUNT_PER_STEP)
         .forEach((card) => this._createCard(filmCardContainer, card));
 
-        renderedTaskCount += TASK_COUNT_PER_STEP;
+        renderedTaskCount += MOVIES_COUNT_PER_STEP;
 
         if (renderedTaskCount >= cardsData.length) {
           removeElement(this._showMoreComponent);
@@ -199,10 +208,10 @@ export default class Board {
 
   // Мeтод рендеринга контейнеров для Top Rated и Most Commented фильмов
   _renderExtraContainers() {
-    renderElement(this._cardBoardComponent, this._topRatedComponent, RenderPosition.BEFOREEND);
-    renderElement(this._cardBoardComponent, this._mostViewedComponent, RenderPosition.BEFOREEND);
+    // renderElement(this._cardBoardComponent, this._topRatedComponent, RenderPosition.BEFOREEND);
+    // renderElement(this._cardBoardComponent, this._mostViewedComponent, RenderPosition.BEFOREEND);
 
-    this._renderExtraCards();
+    // this._renderExtraCards();
   }
 
   // Метод рендеринга карточек фильмов в Top Rated и Most Commented
@@ -220,21 +229,21 @@ export default class Board {
 
   // Метод очищения списка карточек фильмов
   _clearCardsList({resetRenderedCardsCount = false, resetSortType = false} = {}) {
-    const cardsCount = this._getMovies().length;
+    const moviesCount = this._getMovies().length;
 
     Object
-      .values(this._cardPresenter)
+      .values(this._moviePresenter)
       .forEach((presenter) => presenter.destroy());
-    this._cardPresenter = {};
+    this._moviePresenter = {};
 
-    removeElement(this._sortListComponent);
-    removeElement(this._noFilmCardComponent);
-    removeElement(this._showMoreComponent);
+    // removeElement(this._sortListComponent);
+    // removeElement(this._noFilmCardComponent);
+    // removeElement(this._showMoreComponent);
 
     if (resetRenderedCardsCount) {
-      this._renderedCardsCount  = TASK_COUNT_PER_STEP;
+      this._renderedCardsCount  = MOVIES_COUNT_PER_STEP;
     } else {
-      this._renderedCardsCount = Math.min(cardsCount, this._renderedCardsCount);
+      this._renderedCardsCount = Math.min(moviesCount, this._renderedCardsCount);
     }
 
     if (resetSortType) {

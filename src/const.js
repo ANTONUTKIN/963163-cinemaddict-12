@@ -40,8 +40,14 @@ export const UserAction = {
 };
 
 export const FilterType = {
-  ALL: `all movies`,
+  ALL: `all`,
   WATCHLIST: `watchlist`,
   HISTORY: `history`,
   FAVORITES: `favorites`,
+};
+
+
+export const Mode = {
+  OPENED: `OPENED`,
+  CLOSED: `CLOSED`,
 };

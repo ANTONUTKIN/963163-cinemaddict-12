@@ -1,20 +1,16 @@
-import FilterView from "../view/stats-filters.js";
+import FilterView from "../view/filters.js";
 import {renderElement, RenderPosition, replace, removeElement} from "../utils/render.js";
-import NavBoard from "../view/nav-board.js";
 import {filter} from "../utils/filter.js";
 import {FilterType, UpdateType} from "../const.js";
 
 export default class Filter {
   constructor(boardContainer, filterModel, moviesModel) {
     this._boardContainer = boardContainer;
-    this._boardContainer = boardContainer;
     this._filterModel = filterModel;
     this._moviesModel = moviesModel;
-    this._currentSortType = null;
+    this._currentFilter = null;
 
-    this._filterComponent = null;
-
-    this._navBoardComponent = new NavBoard();
+    this._filterComponent = null;  
 
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleFilterTypeChange = this._handleFilterTypeChange.bind(this);
@@ -32,9 +28,10 @@ export default class Filter {
     this._filterComponent = new FilterView(filters, this._currentFilter);
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
+    
+
     if (prevFilterComponent === null) {
-      renderElement(this._boardContainer, this._navBoardComponent, RenderPosition.BEFOREEND);
-      renderElement(this._navBoardComponent, this._statsComponent, RenderPosition.AFTERBEGIN);
+      renderElement(this._boardContainer, this._filterComponent, RenderPosition.BEFOREEND);
       return;
     }
 
@@ -55,28 +52,28 @@ export default class Filter {
   }
 
   _getFilters() {
-    const cards = this._moviesModel.getMovies();
+    const movies = this._moviesModel.getMovies();
 
     return [
       {
         type: FilterType.ALL,
         name: `All`,
-        count: filter[FilterType.ALL](cards).length
+        count: movies.length
       },
       {
         type: FilterType.HISTORY,
-        name: `addedToWatchlist`,
-        count: filter[FilterType.HISTORY](cards).length
+        name: `Watchlist`,
+        count: filter[FilterType.HISTORY](movies).length
       },
       {
         type: FilterType.WATCHLIST,
-        name: `addedToWatchlist`,
-        count: filter[FilterType.WATCHLIST](cards).length
+        name: `History`,
+        count: filter[FilterType.WATCHLIST](movies).length
       },
       {
         type: FilterType.FAVORITES,
         name: `Favorites`,
-        count: filter[FilterType.FAVORITES](tasks).length
+        count: filter[FilterType.FAVORITES](movies).length
       },
     ];
   }

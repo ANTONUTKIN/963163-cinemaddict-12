@@ -1,8 +1,11 @@
-import Board from "./presenter/board.js";
+import MovieList from "./presenter/movie-list.js";
 import MoviesModel from "./model/movies.js";
 import FilterModel from "./model/filter.js";
 import FilterPresenter from "./presenter/filter.js";
 import {generateCard} from "./mock/card.js";
+import UserProfileView from "./view/user-profile.js";
+import { renderElement, RenderPosition } from "./utils/render.js";
+
 
 const CARDS_COUNT = 25;
 const cards = new Array(CARDS_COUNT).fill().map(generateCard);
@@ -12,12 +15,19 @@ moviesModel.setMovies(cards);
 
 const filterModel = new FilterModel();
 
-const siteMainElement = document.querySelector(`.main`);
+const mainElement = document.querySelector(`.main`);
 const documentBody = document.querySelector(`body`);
-const siteHeaderElement = document.querySelector(`.header`);
+const headerElement = document.querySelector(`.header`);
 
-const boardPresenter = new Board(siteMainElement, siteHeaderElement, documentBody, moviesModel);
-const filterPresenter = new FilterPresenter(siteMainElement, filterModel, moviesModel);
-
+const filterPresenter = new FilterPresenter(mainElement, filterModel, moviesModel);
 filterPresenter.init();
+
+
+const boardPresenter = new MovieList(mainElement, moviesModel, filterModel);
 boardPresenter.init();
+
+
+
+
+
+renderElement(headerElement, new UserProfileView(), RenderPosition.BEFOREEND);
