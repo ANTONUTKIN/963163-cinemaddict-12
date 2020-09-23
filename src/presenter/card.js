@@ -18,6 +18,7 @@ export default class Card {
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._closePopupHandler = this._closePopupHandler.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
+    this._handleCommentDeleteClick = this._handleCommentDeleteClick.bind(this);
   }
 
   init(content) {
@@ -37,6 +38,7 @@ export default class Card {
     this._popupComponent.setAddToWatchlistHandler(this._handleWatchlistClick);
     this._popupComponent.setAlreadyWatchedHandler(this._handleWatchedClick);
     this._popupComponent.setAddToFavoritsHandler(this._handleFavoriteClick);
+    this._popupComponent.setCommentDeleteHandler(this._handleFavoriteClick);
 
     if (prevCardComponent === null || prevPopupComponent === null) {
       renderElement(this._cardBoardElement, this._cardComponent, RenderPosition.BEFOREEND);
@@ -74,7 +76,7 @@ export default class Card {
     this._popupComponent.setClosePopupHandler(this._closePopupHandler);
     this._popupComponent.setAddToWatchlistHandler(this._handleWatchlistClick);
     this._popupComponent.setAlreadyWatchedHandler(this._handleWatchedClick);
-    this._popupComponent.setAddToFavoritsHandler(this._handleFavoriteClick);
+    this._popupComponent.setAddToFavoritsHandler(this._handleCommentDeleteClick);
   }
 
   _handleWatchlistClick() {
@@ -122,5 +124,13 @@ export default class Card {
   _closePopupHandler() {
     removeElement(this._popupComponent);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
+  }
+
+  _handleCommentDeleteClick(card) {
+    this._changeData(
+        UserAction.DELETE_COMMENT,
+        UpdateType.PATCH,
+        card
+    );
   }
 }

@@ -12,7 +12,6 @@ import CardPresenter from "../presenter/card.js";
 import {generateFilters} from "../mock/filters.js";
 import {renderElement, RenderPosition, removeElement} from "../utils/render.js";
 import {sortRating, sortDate} from "../utils/sort.js";
-// import {updateItem} from "../utils/common.js";
 import {SortType, UpdateType, UserAction} from "../const.js";
 
 const CARDS_IN_BLOCK_COUNT = 2;
@@ -34,7 +33,6 @@ export default class Board {
     this._navBoardComponent = new NavBoard();
     this._cardBoardComponent = new CardBoard();
     this._noFilmCardComponent = new NoData();
-    // this._showMoreComponent = new ShowMore();
     this._topRatedComponent = new TopRatedContainer();
     this._mostViewedComponent = new MostCommentedContainer();
 
@@ -65,8 +63,7 @@ export default class Board {
     return this._cardsModel.getMovies();
   }
 
-
-  // Обработчик изменения данных карточки фильма
+  // Обработчик изменения отбражения
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_CARD_LIST:
@@ -81,6 +78,7 @@ export default class Board {
     }
   }
 
+    // Обработчик изменения модели
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
@@ -88,14 +86,17 @@ export default class Board {
         this._cardPresenter[data.id].init(data);
         break;
       case UpdateType.MINOR:
+        this._clearCardsList();
+        this._renderCardBoard();
         // - обновить список (например, когда задача ушла в архив)
         break;
       case UpdateType.MAJOR:
+        this._clearCardsList({resetRenderedCardsCount = true, resetSortType = true} = {});
+        this._renderCardBoard();
         // - обновить всю доску (например, при переключении фильтра)
         break;
     }
   }
-
 
   // Метод рендеринга иконки профиля
   _renderIcon() {
@@ -119,8 +120,9 @@ export default class Board {
       return;
     }
     this._currentSortType = sortType;
-    this._boardContainer.querySelector(`.films-list__container`).innerHTML = ``;
-    this._renderCard();
+    this. _clearCardsList({resetRenderedCardsCount: true});
+    this._renderCardBoard();
+    console.log(this._currentSortType)
   }
 
   // Метод сортировки карточек фильмов
@@ -136,13 +138,15 @@ export default class Board {
 
   // Метод для рендеринга доски для карточек фильмов
   _renderCardBoard() {
-    const cardsCount = this._getMovies().length;
+    const cards  = this._getMovies();
+    const cardsCount = cards.length;
     if (cardsCount === 0) {
       renderElement(this._boardContainer, this._noFilmCardComponent, RenderPosition.BEFOREEND);
     } else {
       renderElement(this._boardContainer, this._cardBoardComponent, RenderPosition.BEFOREEND);
     }
 
+    this._renderSortMenu();
     this._renderCard();
     this._renderShowMoreButton();
   }
@@ -216,16 +220,16 @@ export default class Board {
 
   // Метод очищения списка карточек фильмов
   _clearCardsList({resetRenderedCardsCount = false, resetSortType = false} = {}) {
-    const cardsCount = this._getTasks().length;
+    const cardsCount = this._getMovies().length;
 
     Object
       .values(this._cardPresenter)
       .forEach((presenter) => presenter.destroy());
     this._cardPresenter = {};
 
-    remove(this._sortListComponent);
-    remove(this._noFilmCardComponent);
-    remove(this._showMoreComponent);
+    removeElement(this._sortListComponent);
+    removeElement(this._noFilmCardComponent);
+    removeElement(this._showMoreComponent);
 
     if (resetRenderedCardsCount) {
       this._renderedCardsCount  = TASK_COUNT_PER_STEP;

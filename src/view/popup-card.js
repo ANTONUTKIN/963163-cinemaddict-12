@@ -3,7 +3,7 @@ import {getRandomInteger} from "../utils/common.js";
 
 
 const createDetailsPopupTemplate = (card) => {
-  const {poster, age, filmName, rating, director, writers, commentsCount, actors, datePopup, duration, country, genrePopup, discriptionPopup, isAddedInWachlist, isWatched, isFavorite, comments} = card;
+  const {poster, age, filmName, rating, director, writers, commentsCount, actors, datePopup, duration, country, genrePopup, discriptionPopup, isAddedInWachlist, isWatched, isFavorite, comments, commentsAuthors} = card;
 
   const watchlistChecker = isAddedInWachlist
     ? `checked`
@@ -17,11 +17,11 @@ const createDetailsPopupTemplate = (card) => {
     ? `checked`
     : ``;
 
-    const getRandomComments = () => {
-      const randomIndex = getRandomInteger(1, comments.length - 1);
-      const comment = comments[randomIndex];
+    const getRandom = (element) => {
+      const randomIndex = getRandomInteger(0, element.length - 1);
+      const result = element[randomIndex];
     
-      return comment;
+      return result;
     }
 
   return (
@@ -109,9 +109,9 @@ const createDetailsPopupTemplate = (card) => {
                   <img src="./images/emoji/smile.png" width="55" height="55" alt="emoji-smile">
                 </span>
                 <div>
-                  <p class="film-details__comment-text">${getRandomComments()}</p>
+                  <p class="film-details__comment-text">${getRandom(comments)}</p>
                   <p class="film-details__comment-info">
-                    <span class="film-details__comment-author">Tim Macoveev</span>
+                    <span class="film-details__comment-author">${getRandom(commentsAuthors)}</span>
                     <span class="film-details__comment-day">2019/12/31 23:59</span>
                     <button class="film-details__comment-delete">Delete</button>
                   </p>
@@ -122,9 +122,9 @@ const createDetailsPopupTemplate = (card) => {
                   <img src="./images/emoji/sleeping.png" width="55" height="55" alt="emoji-sleeping">
                 </span>
                 <div>
-                  <p class="film-details__comment-text">${getRandomComments()}</p>
+                  <p class="film-details__comment-text">${getRandom(comments)}</p>
                   <p class="film-details__comment-info">
-                    <span class="film-details__comment-author">John Doe</span>
+                    <span class="film-details__comment-author">${getRandom(commentsAuthors)}</span>
                     <span class="film-details__comment-day">2 days ago</span>
                     <button class="film-details__comment-delete">Delete</button>
                   </p>
@@ -135,9 +135,9 @@ const createDetailsPopupTemplate = (card) => {
                   <img src="./images/emoji/puke.png" width="55" height="55" alt="emoji-puke">
                 </span>
                 <div>
-                  <p class="film-details__comment-text">${getRandomComments()}</p>
+                  <p class="film-details__comment-text">${getRandom(comments)}</p>
                   <p class="film-details__comment-info">
-                    <span class="film-details__comment-author">John Doe</span>
+                    <span class="film-details__comment-author">${getRandom(commentsAuthors)}</span>
                     <span class="film-details__comment-day">2 days ago</span>
                     <button class="film-details__comment-delete">Delete</button>
                   </p>
@@ -148,9 +148,9 @@ const createDetailsPopupTemplate = (card) => {
                   <img src="./images/emoji/angry.png" width="55" height="55" alt="emoji-angry">
                 </span>
                 <div>
-                  <p class="film-details__comment-text">${getRandomComments()}</p>
+                  <p class="film-details__comment-text">${getRandom(comments)}</p>
                   <p class="film-details__comment-info">
-                    <span class="film-details__comment-author">John Doe</span>
+                    <span class="film-details__comment-author">${getRandom(commentsAuthors)}</span>
                     <span class="film-details__comment-day">Today</span>
                     <button class="film-details__comment-delete">Delete</button>
                   </p>
@@ -200,6 +200,7 @@ export default class CardPopup extends SmartView {
     this.card = card;
 
     this._closePopupHandler = this._closePopupHandler.bind(this);
+    this._deleteCommentHandler = this._deleteCommentHandler.bind(this);
 
     this._toWatchlistHandler = this._toWatchlistHandler.bind(this);
     this._alreadyWatchedHandler = this._alreadyWatchedHandler.bind(this);
@@ -263,9 +264,19 @@ export default class CardPopup extends SmartView {
     this._callback.popupClick();
   }
 
+  _deleteCommentHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick();
+  }
+
   setClosePopupHandler(callback) {
     this._callback.popupClick = callback;
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closePopupHandler);
+  }
+
+  setCommentDeleteHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector(`.film-details__comment-delete`).addEventListener(`click`, this._deleteCommentHandler);
   }
 }
 

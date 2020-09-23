@@ -280,6 +280,14 @@ const commentsArr = [
   `Almost two hours? Seriously?`,
 ];
 
+const commentsAuthors = [
+  `Baklan Bazarov`,
+  `John Doe`,
+  `Tim Macoveev`,
+  `Artur Commentov`,
+  `Vasily Terkin`,
+];
+
 export const generateCard = () => {
   return {
     id: generateId(),
@@ -303,5 +311,6 @@ export const generateCard = () => {
     genrePopup: generatePopupGenre(),
     discriptionPopup: generatePopupDiscription(),
     comments: commentsArr,
+    commentsAuthors: commentsAuthors,
   };
 };
