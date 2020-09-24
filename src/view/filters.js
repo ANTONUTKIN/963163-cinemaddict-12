@@ -35,7 +35,9 @@ export default class StatsFilter extends Abstract {
   _filterTypeChangeHandler(evt) {
     evt.preventDefault();
     const filterType = evt.target.dataset.type;
-    filterType && this._callback.filterTypeChange(filterType);
+    if (filterType) {
+      this._callback.filterTypeChange(filterType);
+    }
   }
 
   setFilterTypeChangeHandler(callback) {
