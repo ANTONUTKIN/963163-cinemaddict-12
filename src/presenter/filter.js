@@ -61,14 +61,14 @@ export default class Filter {
         count: movies.length
       },
       {
-        type: FilterType.HISTORY,
+        type: FilterType.WATCHLIST,
         name: `Watchlist`,
-        count: filter[FilterType.HISTORY](movies).length
+        count: filter[FilterType.WATCHLIST](movies).length
       },
       {
-        type: FilterType.WATCHLIST,
+        type: FilterType.HISTORY,
         name: `History`,
-        count: filter[FilterType.WATCHLIST](movies).length
+        count: filter[FilterType.HISTORY](movies).length
       },
       {
         type: FilterType.FAVORITES,
