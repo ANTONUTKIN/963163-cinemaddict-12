@@ -26,3 +26,31 @@ export const SortType = {
   DATE_SORT: `date`,
   RATING_SORT: `rating`
 };
+
+export const UpdateType = {
+  PATCH: `PATCH`,
+  MINOR: `MINOR`,
+  MAJOR: `MAJOR`
+};
+
+export const UserAction = {
+  UPDATE_MOVIE: `UPDATE_MOVIE`,
+  ADD_COMMENT: `ADD_COMMENT`,
+  DELETE_COMMENT: `DELETE_COMMENT`
+};
+
+export const FilterType = {
+  ALL: `all`,
+  WATCHLIST: `watchlist`,
+  HISTORY: `history`,
+  FAVORITES: `favorites`,
+};
+
+
+export const Mode = {
+  OPENED: `OPENED`,
+  CLOSED: `CLOSED`,
+};
+
+export const MOVIES_COUNT_PER_STEP = 5;
+export const CARDS_IN_BLOCK_COUNT = 2;
