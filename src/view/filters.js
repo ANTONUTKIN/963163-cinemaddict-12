@@ -1,4 +1,4 @@
-import { filter } from "../utils/filter.js";
+// import { filter } from "../utils/filter.js";
 import Abstract from "./abstract.js";
 
 
@@ -25,17 +25,17 @@ export default class StatsFilter extends Abstract {
   }
 
   _createFilterItem(filter, currentFilter) {
-    const { name, count, type } = filter;
+    const {name, count, type} = filter;
     const activeClass = currentFilter === type ? `main-navigation__item--active` : ``;
     return `<a href="#${name}" data-type="${type}" class="main-navigation__item ${activeClass}">${name}
-            ${name !== `All` ? `<span class="main-navigation__item-count">${count || 0}</span>` : ""}
+            ${name !== `All` ? `<span class="main-navigation__item-count">${count || 0}</span>` : ``}
             </a>`;
   }
 
   _filterTypeChangeHandler(evt) {
     evt.preventDefault();
     const filterType = evt.target.dataset.type;
-    this._callback.filterTypeChange(filterType);
+    filterType && this._callback.filterTypeChange(filterType);
   }
 
   setFilterTypeChangeHandler(callback) {

@@ -17,12 +17,12 @@ const createDetailsPopupTemplate = (card) => {
     ? `checked`
     : ``;
 
-    const getRandom = (element) => {
-      const randomIndex = getRandomInteger(0, element.length - 1);
-      const result = element[randomIndex];
-    
-      return result;
-    }
+  const getRandom = (element) => {
+    const randomIndex = getRandomInteger(0, element.length - 1);
+    const result = element[randomIndex];
+
+    return result;
+  };
 
   return (
     `<section class="film-details">

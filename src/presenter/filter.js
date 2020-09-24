@@ -10,7 +10,7 @@ export default class Filter {
     this._moviesModel = moviesModel;
     this._currentFilter = null;
 
-    this._filterComponent = null;  
+    this._filterComponent = null;
 
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleFilterTypeChange = this._handleFilterTypeChange.bind(this);
@@ -27,8 +27,6 @@ export default class Filter {
 
     this._filterComponent = new FilterView(filters, this._currentFilter);
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
-
-    
 
     if (prevFilterComponent === null) {
       renderElement(this._boardContainer, this._filterComponent, RenderPosition.BEFOREEND);
@@ -61,14 +59,14 @@ export default class Filter {
         count: movies.length
       },
       {
-        type: FilterType.WATCHLIST,
+        type: FilterType.HISTORY,
         name: `Watchlist`,
-        count: filter[FilterType.WATCHLIST](movies).length
+        count: filter[FilterType.HISTORY](movies).length
       },
       {
-        type: FilterType.HISTORY,
+        type: FilterType.WATCHLIST,
         name: `History`,
-        count: filter[FilterType.HISTORY](movies).length
+        count: filter[FilterType.WATCHLIST](movies).length
       },
       {
         type: FilterType.FAVORITES,

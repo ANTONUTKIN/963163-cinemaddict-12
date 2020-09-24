@@ -34,7 +34,7 @@ export const UpdateType = {
 };
 
 export const UserAction = {
-  UPDATE_CARD_LIST: `UPDATE_CARD_LIST`,
+  UPDATE_MOVIE: `UPDATE_MOVIE`,
   ADD_COMMENT: `ADD_COMMENT`,
   DELETE_COMMENT: `DELETE_COMMENT`
 };
@@ -51,3 +51,6 @@ export const Mode = {
   OPENED: `OPENED`,
   CLOSED: `CLOSED`,
 };
+
+export const MOVIES_COUNT_PER_STEP = 5;
+export const CARDS_IN_BLOCK_COUNT = 2;

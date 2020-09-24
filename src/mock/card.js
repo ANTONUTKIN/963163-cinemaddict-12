@@ -1,5 +1,6 @@
 import {getRandomInteger} from "../utils/common.js";
 import {DATA} from "../const.js";
+import {generateComment} from "./comment.js";
 
 const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
@@ -273,20 +274,23 @@ const generatePopupDiscription = () => {
   return result;
 };
 
-const commentsArr = [
-  `Interesting setting and a good cast`,
-  `Booooooooooring`,
-  `Very very old. Meh`,
-  `Almost two hours? Seriously?`,
-];
-
-const commentsAuthors = [
+const commentsAuthor = [
   `Baklan Bazarov`,
   `John Doe`,
   `Tim Macoveev`,
   `Artur Commentov`,
   `Vasily Terkin`,
 ];
+
+
+const generateComments = () => {
+  const commentCount = getRandomInteger(0, 5);
+  const commetns = [];
+  for (let i = 0; i < commentCount; i++) {
+    commetns.push(generateComment());
+  }
+  return commetns;
+};
 
 export const generateCard = () => {
   return {
@@ -310,7 +314,7 @@ export const generateCard = () => {
     datePopup: generateDate(),
     genrePopup: generatePopupGenre(),
     discriptionPopup: generatePopupDiscription(),
-    comments: commentsArr,
-    commentsAuthors: commentsAuthors,
+    comments: generateComments(),
+    commentsAuthors: commentsAuthor
   };
 };

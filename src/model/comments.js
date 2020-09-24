@@ -15,16 +15,16 @@ export default class Comments extends Observer {
   }
 
   addComment(updateType, update) {
-    this._tasks = [
+    this._comments = [
       update,
-      ...this._tasks
+      ...this._comments
     ];
 
     this._notify(updateType, update);
   }
 
-  deleteComment(updateType, update) {
-    const index = this._comments.findIndex((comment) => comment.id === update.id);
+  deleteComment(updateType, commentId) {
+    const index = this._comments.findIndex((comment) => comment.id === commentId);
 
     if (index === -1) {
       throw new Error(`Can't delete unexisting task`);

@@ -2,7 +2,8 @@ import Abstract from "../view/abstract.js";
 
 export const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`
+  BEFOREEND: `beforeend`,
+  BEFORE: `before`,
 };
 
 export const renderElement = (container, element, place) => {
@@ -22,12 +23,35 @@ export const renderElement = (container, element, place) => {
     case RenderPosition.BEFOREEND:
       container.append(element);
       break;
+    case RenderPosition.BEFORE:
+      container.before(element);
+      break;
   }
 };
 
-export const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
+export const render = (container, element, place) => {
+  if (container instanceof Abstract) {
+    container = container.getElement();
+  }
+
+  if (element instanceof Abstract) {
+    element = element.getElement();
+  }
+
+
+  switch (place) {
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case RenderPosition.BEFOREEND:
+      container.append(element);
+      break;
+    case RenderPosition.BEFORE:
+      container.before(element);
+      break;
+  }
 };
+
 
 export const createElement = (template) => {
   const newElement = document.createElement(`div`);
@@ -42,6 +66,16 @@ export const removeElement = (element) => {
   }
   element.getElement().remove();
   element.removeElement();
+};
+
+
+export const remove = (component) => {
+  if (!(component instanceof Abstract)) {
+    throw new Error(`Can remove only components`);
+  }
+
+  component.getElement().remove();
+  component.removeElement();
 };
 
 export const replace = (newChild, oldChild) => {

@@ -14,8 +14,8 @@ export default class Movies extends Observer {
     return this._movies;
   }
 
-  updateCard(updateType, update) {
-    const index = this._movies.findIndex((card) => card.id === update.id);
+  updateMovie(updateType, update) {
+    const index = this._movies.findIndex((movie) => movie.id === update.id);
 
     if (index === -1) {
       throw new Error(`Can't update list with unexisting card`);
