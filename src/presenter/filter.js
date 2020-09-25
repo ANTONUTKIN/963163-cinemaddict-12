@@ -14,6 +14,7 @@ export default class Filter {
 
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleFilterTypeChange = this._handleFilterTypeChange.bind(this);
+    this._handleStatisticsClick = this._handleStatisticsClick.bind(this);
 
     this._moviesModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
@@ -27,6 +28,7 @@ export default class Filter {
 
     this._filterComponent = new FilterView(filters, this._currentFilter);
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
+    this._filterComponent.setStatisticsClickHandler(this._handleStatisticsClick);
 
     if (prevFilterComponent === null) {
       renderElement(this._boardContainer, this._filterComponent, RenderPosition.BEFOREEND);
@@ -41,13 +43,6 @@ export default class Filter {
     this.init();
   }
 
-  _handleFilterTypeChange(filterType) {
-    if (this._currentFilter === filterType) {
-      return;
-    }
-
-    this._filterModel.setFilter(UpdateType.MAJOR, filterType);
-  }
 
   _getFilters() {
     const movies = this._moviesModel.getMovies();
@@ -59,14 +54,14 @@ export default class Filter {
         count: movies.length
       },
       {
-        type: FilterType.HISTORY,
+        type: FilterType.WATCHLIST,
         name: `Watchlist`,
-        count: filter[FilterType.HISTORY](movies).length
+        count: filter[FilterType.WATCHLIST](movies).length
       },
       {
-        type: FilterType.WATCHLIST,
+        type: FilterType.HISTORY,
         name: `History`,
-        count: filter[FilterType.WATCHLIST](movies).length
+        count: filter[FilterType.HISTORY](movies).length
       },
       {
         type: FilterType.FAVORITES,
@@ -74,5 +69,18 @@ export default class Filter {
         count: filter[FilterType.FAVORITES](movies).length
       },
     ];
+  }
+
+
+  _handleFilterTypeChange(filterType) {
+    if (this._currentFilter === filterType) {
+      return;
+    }
+
+    this._filterModel.setFilter(UpdateType.MAJOR, filterType);
+  }
+
+  _handleStatisticsClick() {
+    this._filterModel.setFilter(UpdateType.SUPREME, FilterType.STATS);
   }
 }

@@ -85,6 +85,26 @@ const generateGenre = () => {
   return genre;
 };
 
+const generateGenres = () => {
+  const genres = [
+    `Musical`,
+    `Western`,
+    `Drama`,
+    `Comedy`,
+    `Cartoon`,
+    `Mystery`,
+  ];
+
+  genres.sort(function () {
+    return 0.5 - Math.random();
+  });
+
+  const randomIndex = getRandomInteger(1, genres.length - 1);
+
+
+  return genres.slice(0, randomIndex);
+};
+
 const generateTime = () => {
   const hourIndex = getRandomInteger(DATA.MIN_HOURS, DATA.MAX_HOURS);
   const minuteIndex = getRandomInteger(DATA.MIN_MINUTES, DATA.MAX_MINUTES);
@@ -283,6 +303,15 @@ const commentsAuthor = [
 ];
 
 
+const generateSomeDate = () => {
+  const start = new Date(2019, 0, 1);
+  const currentDate = new Date();
+
+  const date = start.getTime() + Math.random() * (currentDate.getTime() - start.getTime());
+
+  return new Date(date);
+};
+
 const generateComments = () => {
   const commentCount = getRandomInteger(0, 5);
   const commetns = [];
@@ -293,6 +322,10 @@ const generateComments = () => {
 };
 
 export const generateCard = () => {
+
+  const isWatched = Boolean(getRandomInteger(0, 1));
+  const watchingDate = isWatched ? generateSomeDate() : ``;
+
   return {
     id: generateId(),
     filmName: generateFilmName(),
@@ -301,10 +334,11 @@ export const generateCard = () => {
     commentsCount: generateCommentsNumber(),
     date: generateFilmDate(),
     genre: generateGenre(),
+    genres: generateGenres(),
     duration: generateTime(),
     rating: generateRating(),
     isAddedInWachlist: Boolean(getRandomInteger(0, 1)),
-    isWatched: Boolean(getRandomInteger(0, 1)),
+    isWatched,
     isFavorite: Boolean(getRandomInteger(0, 1)),
     age: getRandomInteger(DATA.MIN_AGE, DATA.MAX_AGE),
     director: generateDirectorName(),
@@ -315,6 +349,8 @@ export const generateCard = () => {
     genrePopup: generatePopupGenre(),
     discriptionPopup: generatePopupDiscription(),
     comments: generateComments(),
-    commentsAuthors: commentsAuthor
+    commentsAuthors: commentsAuthor,
+    runtime: getRandomInteger(10, 150),
+    watchingDate
   };
 };

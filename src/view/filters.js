@@ -9,6 +9,7 @@ export default class StatsFilter extends Abstract {
     this._currentFilter = currentFilterType;
 
     this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
+    this._statisticsClickHandler = this._statisticsClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -40,8 +41,18 @@ export default class StatsFilter extends Abstract {
     }
   }
 
+  _statisticsClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.statisticsClick();
+  }
+
   setFilterTypeChangeHandler(callback) {
     this._callback.filterTypeChange = callback;
     this.getElement().addEventListener(`click`, this._filterTypeChangeHandler);
+  }
+
+  setStatisticsClickHandler(callback) {
+    this._callback.statisticsClick = callback;
+    this.getElement().querySelector(`.main-navigation__additional`).addEventListener(`click`, this._statisticsClickHandler);
   }
 }
