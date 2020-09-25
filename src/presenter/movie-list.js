@@ -162,7 +162,14 @@ export default class MovieList {
         this._renderMoviesBoard();
         // - обновить всю доску (например, при переключении фильтра)
         break;
+      case UpdateType.SUPREME:
+        this.destroy();
+        break;
     }
+  }
+
+  destroy() {
+    this._clearMoviesList({resetRenderedMoviesCount: true, resetSortType: true});
   }
 
 
@@ -200,7 +207,6 @@ export default class MovieList {
 
   // Метод очищения списка карточек фильмов
   _clearMoviesList({resetRenderedMoviesCount = false, resetSortType = false} = {}) {
-    const moviesCount = this._getMovies().length;
 
     Object
       .values(this._moviePresenter)
@@ -214,7 +220,7 @@ export default class MovieList {
     if (resetRenderedMoviesCount) {
       this._renderedMoviesCount = MOVIES_COUNT_PER_STEP;
     } else {
-      this._renderedMoviesCount = Math.min(moviesCount, this._renderedCardsCount);
+      this._renderedMoviesCount = Math.min(this._getMovies().length, this._renderedCardsCount);
     }
 
     if (resetSortType) {

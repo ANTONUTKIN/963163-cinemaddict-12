@@ -30,7 +30,8 @@ export const SortType = {
 export const UpdateType = {
   PATCH: `PATCH`,
   MINOR: `MINOR`,
-  MAJOR: `MAJOR`
+  MAJOR: `MAJOR`,
+  SUPREME: `SUPREME`,
 };
 
 export const UserAction = {
@@ -44,6 +45,7 @@ export const FilterType = {
   WATCHLIST: `watchlist`,
   HISTORY: `history`,
   FAVORITES: `favorites`,
+  STATS: `stats`
 };
 
 
@@ -54,3 +56,11 @@ export const Mode = {
 
 export const MOVIES_COUNT_PER_STEP = 5;
 export const CARDS_IN_BLOCK_COUNT = 2;
+
+export const Period = {
+  ALL_TIME: `statistic-all-time`,
+  TODAY: `statistic-today`,
+  WEEK: `statistic-week`,
+  MONTH: `statistic-month`,
+  YEAR: `statistic-year`
+};
