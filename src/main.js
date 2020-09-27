@@ -7,10 +7,18 @@ import FilterModel from "./model/filter.js";
 import {generateCard} from "./mock/card.js";
 import UserProfileView from "./view/user-profile.js";
 import {renderElement, RenderPosition} from "./utils/render.js";
+import Api from "./api.js";
 
 
 const CARDS_COUNT = 25;
 const cards = new Array(CARDS_COUNT).fill().map(generateCard);
+const AUTHORIZATION = `Basic er883jdzbdw`;
+const END_POINT = `https://12.ecmascript.pages.academy/cinemaddict/`;
+const api = new Api(END_POINT, AUTHORIZATION);
+
+api.getMovies().then((movies) => {
+  console.log(movies);
+});
 
 const moviesModel = new MoviesModel();
 moviesModel.setMovies(cards);
