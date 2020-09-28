@@ -35,6 +35,7 @@ export default class Movies extends Observer {
     const adaptedCard = Object.assign({}, movie, {
       poster: movie.film_info.poster,
       filmName: movie.film_info.title,
+      alternativeTitle: movie.film_info.alternative_title,
       description: movie.film_info.description,
       rating: movie.film_info.total_rating,
       date: new Date(movie.film_info.release.date),

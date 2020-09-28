@@ -8,11 +8,10 @@ import UserProfileView from "./view/user-profile.js";
 import FooterStatisticsView from "./view/footer-statistics.js";
 import {render} from "./utils/render.js";
 import Api from "./api.js";
-import {UpdateType} from "./const.js";
+import {AUTHORIZATION, END_POINT, UpdateType} from "./const.js";
 
 
-const AUTHORIZATION = `Basic er883jdzbdw`;
-const END_POINT = `https://12.ecmascript.pages.academy/cinemaddict/`;
+
 const api = new Api(END_POINT, AUTHORIZATION);
 
 

@@ -2,10 +2,10 @@ import Abstract from "./abstract.js";
 import {SortType} from "../const.js";
 
 export default class SortList extends Abstract {
-  constructor() {
+  constructor(currentSortType) {
     super();
 
-    this._currentSortType = SortType.DEFAULT;
+    this._currentSortType = currentSortType;
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
   }
 

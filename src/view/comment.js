@@ -1,3 +1,5 @@
+import moment from 'moment';
+import he from "he";
 import SmartView from "./smart";
 
 
@@ -15,16 +17,16 @@ export default class Comment extends SmartView {
   }
 
   getTemplate() {
-    const {emotion, comment, author} = this._comment;
+    const {emotion, comment, author, date} = this._comment;
     return `<li class="film-details__comment">
         <span class="film-details__comment-emoji">
           <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-puke">
         </span>
         <div>
-          <p class="film-details__comment-text">${comment}</p>
+          <p class="film-details__comment-text">${he.encode(comment)}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${author}</span>
-            <span class="film-details__comment-day">2 days ago</span>
+            <span class="film-details__comment-day">${moment(date).fromNow()}</span>
             <button class="film-details__comment-delete">Delete</button>
           </p>
         </div>

@@ -2,7 +2,7 @@ import {formatMovieDuration, getReleaseDate} from "../utils/movie.js";
 import SmartView from "./smart.js";
 
 const createDetailsPopupTemplate = (movie) => {
-  const {poster, ageRating, filmName, rating, director, writers, actors, date, description, genre, runtime, country, isAddedInWachlist, isWatched, isFavorite} = movie;
+  const {poster, ageRating, filmName, rating, director, writers, actors, date, description, genre, runtime, country, isAddedInWachlist, isWatched, isFavorite, alternativeTitle} = movie;
 
   const watchlistChecker = isAddedInWachlist
     ? `checked`
@@ -34,7 +34,7 @@ const createDetailsPopupTemplate = (movie) => {
               <div class="film-details__info-head">
                 <div class="film-details__title-wrap">
                   <h3 class="film-details__title">${filmName}</h3>
-                  <p class="film-details__title-original">Original: ${filmName}</p>
+                  <p class="film-details__title-original">Original: ${alternativeTitle}</p>
                 </div>
 
                 <div class="film-details__rating">
@@ -108,7 +108,6 @@ export default class MoviePopup extends SmartView {
     this._toWatchlistHandler = this._toWatchlistHandler.bind(this);
     this._alreadyWatchedHandler = this._alreadyWatchedHandler.bind(this);
     this._addToFavoritsHandler = this._addToFavoritsHandler.bind(this);
-    // this._setInnerHandlers();
 
   }
 
@@ -145,10 +144,6 @@ export default class MoviePopup extends SmartView {
   setAddToFavoritsHandler(callback) {
     this._callback.favoritsClick = callback;
     this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._addToFavoritsHandler);
-  }
-
-  restoreHandlers() {
-    // this._setInnerHandlers();
   }
 
   _closePopupHandler(evt) {
