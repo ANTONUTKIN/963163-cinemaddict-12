@@ -1,20 +1,17 @@
+import MoviePresenter from "./movie.js";
 import SortView from "../view/sort.js";
 import NavBoard from "../view/nav-board.js";
 import CardBoard from "../view/card-board.js";
 import NoData from "../view/no-data.js";
 import LoadMoreButtonView from "../view/load-more-button.js";
-import TopRatedContainer from "../view/top-rated.js";
-import MostCommentedContainer from "../view/most-commented.js";
 import LoadingView from '../view/loading';
-import MoviePresenter from "./movie.js";
-import {renderElement, RenderPosition, remove, render} from "../utils/render.js";
+import {RenderPosition, remove, render} from "../utils/render.js";
 import {sortRating, sortDate} from "../utils/sort.js";
 import {MOVIES_COUNT_PER_STEP, SortType, UpdateType, UserAction} from "../const.js";
 import {filter} from "../utils/filter.js";
 
 export default class MovieList {
   constructor(boardContainer, moviesModel, filterModel, commentsModel, api) {
-    this._documentBodyContainer = document.body;
     this._boardContainer = boardContainer;
     this._moviesModel = moviesModel;
     this._filterModel = filterModel;
@@ -28,12 +25,9 @@ export default class MovieList {
     this._sortComponent = null;
     this._loadMoreButtonComponent = null;
 
-    this._sortComponent = new SortView();
     this._navBoardComponent = new NavBoard();
     this._cardBoardComponent = new CardBoard();
     this._noMoviesComponent = new NoData();
-    this._topRatedComponent = new TopRatedContainer();
-    this._mostViewedComponent = new MostCommentedContainer();
     this._loadingComponent = new LoadingView();
 
     this._handleViewAction = this._handleViewAction.bind(this);
@@ -46,16 +40,7 @@ export default class MovieList {
     this._filterModel.addObserver(this._handleModelEvent);
   }
 
-  // Метод инициализации модуля
   init() {
-    this._renderMoviesBoard();
-    // this._renderExtraContainers();
-  }
-
-
-  // Метод для рендеринга доски для карточек фильмов
-  _renderMoviesBoard() {
-    this._renderSortMenu();
     this._renderMoviesList();
   }
 
@@ -68,11 +53,15 @@ export default class MovieList {
     const movies = this._getMovies();
 
     if (movies.length === 0) {
-      renderElement(this._boardContainer, this._noMoviesComponent, RenderPosition.BEFOREEND);
+      render(this._boardContainer, this._noMoviesComponent, RenderPosition.BEFOREEND);
       return;
     }
 
-    renderElement(this._boardContainer, this._cardBoardComponent, RenderPosition.BEFOREEND);
+
+    this._renderSortMenu();
+
+    this._cardBoardComponent = new CardBoard();
+    render(this._boardContainer, this._cardBoardComponent, RenderPosition.BEFOREEND);
     this._renderMovies(movies.slice(0, MOVIES_COUNT_PER_STEP));
 
 
@@ -81,7 +70,7 @@ export default class MovieList {
     }
   }
 
-  // Рендер кнопки допоказа фильмов
+
   _renderLoadMoreButton() {
     if (this._loadMoreButtonComponent !== null) {
       this._loadMoreButtonComponent = null;
@@ -89,7 +78,7 @@ export default class MovieList {
     const moviesListContainer = this._boardContainer.querySelector(`.films-list`);
     this._loadMoreButtonComponent = new LoadMoreButtonView();
     this._loadMoreButtonComponent.setLoadMoreButtonClickHandler(this._handleLoadMoreButtonClick);
-    renderElement(moviesListContainer, this._loadMoreButtonComponent, RenderPosition.BEFOREEND);
+    render(moviesListContainer, this._loadMoreButtonComponent, RenderPosition.BEFOREEND);
   }
 
   _handleLoadMoreButtonClick() {
@@ -107,8 +96,11 @@ export default class MovieList {
 
   }
 
-  // Cортировка  фильмов
   _renderSortMenu() {
+    if (this._sortComponent !== null) {
+      this._sortComponent = null;
+    }
+    this._sortComponent = new SortView(this._currentSortType);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
     render(this._boardContainer.querySelector(`.main-navigation`), this._sortComponent, RenderPosition.AFTER);
   }
@@ -117,7 +109,6 @@ export default class MovieList {
     remove(this._sortComponent);
   }
 
-  // Метод отрисовки списка карточек фильмов из модели
   _getMovies() {
     const filterType = this._filterModel.getFilter();
     const movies = this._moviesModel.getMovies();
@@ -133,7 +124,6 @@ export default class MovieList {
     return filteredMovies;
   }
 
-  // Обработчик изменения отбражения
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_MOVIE:
@@ -144,23 +134,21 @@ export default class MovieList {
     }
   }
 
-  // Обработчик изменения модели
   _handleModelEvent(updateType, data) {
-    window.com = this._commentsModel;
     switch (updateType) {
       case UpdateType.PATCH:
-        // - обновить часть списка (например добавить в просмотренные)
+
         this._moviePresenter[data.id].init(data);
         break;
       case UpdateType.MINOR:
         this._clearMoviesList();
-        this._renderMoviesBoard();
-        // - обновить список (например, когда задача ушла в архив)
+        this._renderMoviesList();
+
         break;
       case UpdateType.MAJOR:
         this._clearMoviesList({resetRenderedMoviesCount: true, resetSortType: true});
-        this._renderMoviesBoard();
-        // - обновить всю доску (например, при переключении фильтра)
+        this._renderMoviesList();
+
         break;
       case UpdateType.SUPREME:
         this.destroy();
@@ -168,7 +156,7 @@ export default class MovieList {
       case UpdateType.INIT:
         this._isLoading = false;
         remove(this._loadingComponent);
-        this._renderMoviesBoard();
+        this._renderMoviesList();
         break;
     }
   }
@@ -177,8 +165,6 @@ export default class MovieList {
     this._clearMoviesList({resetRenderedMoviesCount: true, resetSortType: true});
   }
 
-
-  // Обработчик кнопок сортировки
   _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
       return;
@@ -188,9 +174,8 @@ export default class MovieList {
     this._clearSortMenu();
     this._clearMoviesList({resetRenderedMoviesCount: true});
 
-    this._renderMoviesBoard();
+    this._renderMoviesList();
   }
-
 
   _handleModeChange() {
     Object
@@ -198,7 +183,6 @@ export default class MovieList {
       .forEach((presenter) => presenter.resetView());
   }
 
-  // Метод отрисовки карточек фильмов
   _renderMovies(movies) {
     const moviesListContainer = this._cardBoardComponent.getElement().querySelector(`.films-list__container`);
     movies.forEach((film) => this._renderMovie(film, moviesListContainer));
@@ -214,14 +198,7 @@ export default class MovieList {
     render(this._boardContainer, this._loadingComponent, RenderPosition.BEFOREEND);
   }
 
-  // Метод создания карточек фильмов
-  _createCard(cardBoardElement, content) {
-    this.MoviePresenter = new MoviePresenter(cardBoardElement, this._documentBodyContainer, this._handleViewAction);
-    this.MoviePresenter.init(content);
-    this._moviePresenter[content.id] = this.MoviePresenter;
-  }
 
-  // Метод очищения списка карточек фильмов
   _clearMoviesList({resetRenderedMoviesCount = false, resetSortType = false} = {}) {
 
     Object
@@ -229,6 +206,7 @@ export default class MovieList {
       .forEach((presenter) => presenter.destroy());
     this._moviePresenter = {};
 
+    remove(this._cardBoardComponent);
     remove(this._noMoviesComponent);
     remove(this._sortComponent);
     remove(this._loadMoreButtonComponent);

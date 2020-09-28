@@ -116,5 +116,4 @@ export default class CommentList {
     .forEach((presenter) => presenter.destroy());
     this._commentPresenter = {};
   }
-
 }

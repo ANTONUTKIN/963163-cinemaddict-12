@@ -1,4 +1,4 @@
-import {formatMovieDuration, getReleaseYear} from '../utils/movie.js';
+import {formatMovieDuration, getReleaseYear, getFormatedDescription} from '../utils/movie.js';
 import SmartView from "./smart.js";
 
 const createMovieCardTemplate = ({isAddedInWachlist, isWatched, isFavorite, filmName, rating, date, runtime, genre, poster, description, comments}) => {
@@ -24,7 +24,7 @@ const createMovieCardTemplate = ({isAddedInWachlist, isWatched, isFavorite, film
         <span class="film-card__genre">${genre.join(`, `)}</span>
       </p>
       <img src="${poster}" alt="" class="film-card__poster">
-      <p class="film-card__description">${description}</p>
+      <p class="film-card__description">${getFormatedDescription(description)}</p>
       <a class="film-card__comments">${comments.length} comments</a>
       <form class="film-card__controls">
         <button class="${addToWachlistClassName} film-card__controls-item--add-to-watchlist">Add to watchlist</button>
