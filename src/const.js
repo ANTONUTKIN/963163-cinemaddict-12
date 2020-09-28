@@ -47,12 +47,10 @@ export const Period = {
 
 
 export const MovieDescription = {
-  MAX: 140,  
+  MAX: 140,
   MIN: 0,
   REQUIRE: 139,
 };
-
-
 
 export const AUTHORIZATION = `Basic er883jdzbdw`;
 export const END_POINT = `https://12.ecmascript.pages.academy/cinemaddict/`;

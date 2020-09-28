@@ -1,5 +1,5 @@
 import moment from "moment";
-import { MovieDescription } from "../const";
+import {MovieDescription} from "../const";
 
 export const formatMovieDuration = (duration) => {
   if (!duration) {
@@ -34,6 +34,5 @@ export const getUserRating = (movies) => {
   }
   return rating;
 };
-
 
 export const getFormatedDescription = (description) => description.length > MovieDescription.MAX ? `${description.substring(MovieDescription.MIN, MovieDescription.REQUIRE)}...` : description;
