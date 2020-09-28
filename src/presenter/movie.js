@@ -81,8 +81,12 @@ export default class MoviePresenter {
 
 
   destroy() {
-    removeElement(this._movieComponent);
-    removeElement(this._moviePopupComponent);
+    if (this._movieComponent) {
+      remove(this._movieComponent);
+    }
+    if (this._moviePopupComponent) {
+      remove(this._moviePopupComponent);
+    }
   }
 
   _onEscKeyDown(evt) {
