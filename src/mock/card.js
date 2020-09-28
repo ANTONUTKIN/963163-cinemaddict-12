@@ -53,8 +53,8 @@ const generateDiscription = () => {
   ];
 
   const randomIndex = getRandomInteger(1, discriptionArr.length - 1);
-  const discription = discriptionArr[randomIndex];
-  return discription;
+  const description = discriptionArr[randomIndex];
+  return description;
 };
 
 const generateCommentsNumber = () => {
@@ -168,8 +168,8 @@ const generateWriters = () => {
   const getRandomText = () => {
     for (let i = 0; i < randomMember; i++) {
       const randomIndex = getRandomInteger(1, writersnArr.length - 1);
-      const discription = writersnArr[randomIndex];
-      newArr.push(discription);
+      const description = writersnArr[randomIndex];
+      newArr.push(description);
     }
     return newArr;
   };
@@ -199,8 +199,8 @@ const generateActors = () => {
   const getRandomText = () => {
     for (let i = 0; i < randomMember; i++) {
       const randomIndex = getRandomInteger(1, actorsArr.length - 1);
-      const discription = actorsArr[randomIndex];
-      newArr.push(discription);
+      const description = actorsArr[randomIndex];
+      newArr.push(description);
     }
     return newArr;
   };
@@ -250,8 +250,8 @@ const generatePopupGenre = () => {
   const getRandomGenre = () => {
     for (let i = 0; i < randomNumber; i++) {
       const randomIndex = getRandomInteger(1, genreArr.length - 1);
-      const discription = genreArr[randomIndex];
-      const renderGenre = `<span class="film-details__genre">` + discription + `</span>`;
+      const description = genreArr[randomIndex];
+      const renderGenre = `<span class="film-details__genre">` + description + `</span>`;
       newArr.push(renderGenre);
     }
     return newArr;
@@ -283,8 +283,8 @@ const generatePopupDiscription = () => {
   const getRandomText = () => {
     for (let i = 0; i < randomMember; i++) {
       const randomIndex = getRandomInteger(1, discriptionArr.length - 1);
-      const discription = discriptionArr[randomIndex];
-      newArr.push(discription);
+      const description = discriptionArr[randomIndex];
+      newArr.push(description);
     }
     return newArr;
   };
@@ -330,7 +330,7 @@ export const generateCard = () => {
     id: generateId(),
     filmName: generateFilmName(),
     poster: generatePosterAdress(),
-    discription: generateDiscription(),
+    description: generateDiscription(),
     commentsCount: generateCommentsNumber(),
     date: generateFilmDate(),
     genre: generateGenre(),

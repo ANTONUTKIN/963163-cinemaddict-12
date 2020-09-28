@@ -5,22 +5,25 @@ import NoData from "../view/no-data.js";
 import LoadMoreButtonView from "../view/load-more-button.js";
 import TopRatedContainer from "../view/top-rated.js";
 import MostCommentedContainer from "../view/most-commented.js";
+import LoadingView from '../view/loading';
 import MoviePresenter from "./movie.js";
-import {renderElement, RenderPosition, remove} from "../utils/render.js";
+import {renderElement, RenderPosition, remove, render} from "../utils/render.js";
 import {sortRating, sortDate} from "../utils/sort.js";
 import {MOVIES_COUNT_PER_STEP, SortType, UpdateType, UserAction} from "../const.js";
 import {filter} from "../utils/filter.js";
 
 export default class MovieList {
-  constructor(boardContainer, moviesModel, filterModel, commentsModel) {
+  constructor(boardContainer, moviesModel, filterModel, commentsModel, api) {
     this._documentBodyContainer = document.body;
     this._boardContainer = boardContainer;
     this._moviesModel = moviesModel;
     this._filterModel = filterModel;
     this._commentsModel = commentsModel;
+    this._api = api;
     this._currentSortType = SortType.DEFAULT;
     this._moviePresenter = {};
     this._renderedMoviesCount = MOVIES_COUNT_PER_STEP;
+    this._isLoading = true;
 
     this._sortComponent = null;
     this._loadMoreButtonComponent = null;
@@ -31,11 +34,13 @@ export default class MovieList {
     this._noMoviesComponent = new NoData();
     this._topRatedComponent = new TopRatedContainer();
     this._mostViewedComponent = new MostCommentedContainer();
+    this._loadingComponent = new LoadingView();
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleLoadMoreButtonClick = this._handleLoadMoreButtonClick.bind(this);
+    this._handleModeChange = this._handleModeChange.bind(this);
 
     this._moviesModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
@@ -50,11 +55,16 @@ export default class MovieList {
 
   // Метод для рендеринга доски для карточек фильмов
   _renderMoviesBoard() {
-    this._renderMoviesList();
     this._renderSortMenu();
+    this._renderMoviesList();
   }
 
   _renderMoviesList() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
     const movies = this._getMovies();
 
     if (movies.length === 0) {
@@ -100,7 +110,7 @@ export default class MovieList {
   // Cортировка  фильмов
   _renderSortMenu() {
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
-    renderElement(this._boardContainer.querySelector(`.films`), this._sortComponent, RenderPosition.BEFORE);
+    render(this._boardContainer.querySelector(`.main-navigation`), this._sortComponent, RenderPosition.AFTER);
   }
 
   _clearSortMenu() {
@@ -132,21 +142,11 @@ export default class MovieList {
         this._moviesModel.updateMovie(updateType, update);
         break;
     }
-    // switch (actionType) {
-    //   case UserAction.UPDATE_MOVIE:
-    //     this._moviesModel.updateCard(updateType, update);
-    //     break;
-    //   case UserAction.ADD_COMMENT:
-    //     this._moviesModel.addComment(updateType, update);
-    //     break;
-    //   case UserAction.DELETE_COMMENT:
-    //     this._moviesModel.deleteComment(updateType, update);
-    //     break;
-    // }
   }
 
   // Обработчик изменения модели
   _handleModelEvent(updateType, data) {
+    window.com = this._commentsModel;
     switch (updateType) {
       case UpdateType.PATCH:
         // - обновить часть списка (например добавить в просмотренные)
@@ -164,6 +164,11 @@ export default class MovieList {
         break;
       case UpdateType.SUPREME:
         this.destroy();
+        break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
+        this._renderMoviesBoard();
         break;
     }
   }
@@ -186,6 +191,13 @@ export default class MovieList {
     this._renderMoviesBoard();
   }
 
+
+  _handleModeChange() {
+    Object
+      .values(this._moviePresenter)
+      .forEach((presenter) => presenter.resetView());
+  }
+
   // Метод отрисовки карточек фильмов
   _renderMovies(movies) {
     const moviesListContainer = this._cardBoardComponent.getElement().querySelector(`.films-list__container`);
@@ -193,9 +205,13 @@ export default class MovieList {
   }
 
   _renderMovie(movie, container) {
-    const moviePresenter = new MoviePresenter(container, this._handleViewAction, this._handleModeChange, this._moviesModel, this._commentsModel);
+    const moviePresenter = new MoviePresenter(container, this._handleViewAction, this._handleModeChange, this._moviesModel, this._commentsModel, this._api);
     moviePresenter.init(movie);
     this._moviePresenter[movie.id] = moviePresenter;
+  }
+
+  _renderLoading() {
+    render(this._boardContainer, this._loadingComponent, RenderPosition.BEFOREEND);
   }
 
   // Метод создания карточек фильмов
@@ -216,6 +232,7 @@ export default class MovieList {
     remove(this._noMoviesComponent);
     remove(this._sortComponent);
     remove(this._loadMoreButtonComponent);
+    remove(this._loadingComponent);
 
     if (resetRenderedMoviesCount) {
       this._renderedMoviesCount = MOVIES_COUNT_PER_STEP;

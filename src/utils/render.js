@@ -4,6 +4,7 @@ export const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
   BEFOREEND: `beforeend`,
   BEFORE: `before`,
+  AFTER: `after`,
 };
 
 export const renderElement = (container, element, place) => {
@@ -29,7 +30,7 @@ export const renderElement = (container, element, place) => {
   }
 };
 
-export const render = (container, element, place) => {
+export const render = (container, element, place = RenderPosition.BEFOREEND) => {
   if (container instanceof Abstract) {
     container = container.getElement();
   }
@@ -48,6 +49,9 @@ export const render = (container, element, place) => {
       break;
     case RenderPosition.BEFORE:
       container.before(element);
+      break;
+    case RenderPosition.AFTER:
+      container.after(element);
       break;
   }
 };

@@ -37,9 +37,28 @@ class Comment {
   //   commentMessage.setDeleteClickHandler(this._deleteCommentClickHandler);
   // }
 
+  setDeletingState() {
+    return this._commentComponent.setBtnDeletingState();
+  }
 
-  _handleCommentDeleteClick(comment) {
-    this._deleteComment(UserAction.DELETE_COMMENT, UpdateType.PATCH, comment);
+  resetDeletingState() {
+    return this._commentComponent.resetBtnDeletingState();
+  }
+
+  disableButton() {
+    this._commentComponent.disableButton();
+  }
+
+  enableButton() {
+    this._commentComponent.enableButton();
+  }
+
+  shakeDeletingComment() {
+    this._commentComponent.shake();
+  }
+
+  _handleCommentDeleteClick(commentID) {
+    this._deleteComment(UserAction.DELETE_COMMENT, UpdateType.PATCH, commentID);
   }
 
   destroy() {
