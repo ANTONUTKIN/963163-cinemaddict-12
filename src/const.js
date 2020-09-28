@@ -32,6 +32,7 @@ export const UpdateType = {
   MINOR: `MINOR`,
   MAJOR: `MAJOR`,
   SUPREME: `SUPREME`,
+  INIT: `INIT`
 };
 
 export const UserAction = {

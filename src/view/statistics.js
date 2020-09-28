@@ -7,14 +7,14 @@ import SmartView from "./smart";
 import {Period} from '../const';
 const BAR_HEIGHT = 50;
 
-
 const getAllGenres = (movies) => {
-  const allGenres = movies.map((movie) => movie.genres).flat();
+  const allGenres = movies.map((movie) => movie.genre).flat();
   return allGenres.reduce((accumulator, currentValue) => {
     accumulator[currentValue] = accumulator[currentValue] ? ++accumulator[currentValue] : 1;
     return accumulator;
   }, {});
 };
+
 
 const getProfileRating = (movies) => {
   const watchedMoviesCount = getWatchedMoviesCount(movies);

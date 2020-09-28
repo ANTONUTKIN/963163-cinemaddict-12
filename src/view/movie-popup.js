@@ -1,7 +1,8 @@
+import {formatMovieDuration, getReleaseDate} from "../utils/movie.js";
 import SmartView from "./smart.js";
 
 const createDetailsPopupTemplate = (movie) => {
-  const {poster, age, filmName, rating, director, writers, actors, datePopup, duration, country, genrePopup, discriptionPopup, isAddedInWachlist, isWatched, isFavorite} = movie;
+  const {poster, ageRating, filmName, rating, director, writers, actors, date, description, genre, runtime, country, isAddedInWachlist, isWatched, isFavorite} = movie;
 
   const watchlistChecker = isAddedInWachlist
     ? `checked`
@@ -24,9 +25,9 @@ const createDetailsPopupTemplate = (movie) => {
           </div>
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
-              <img class="film-details__poster-img" ${poster} alt="">
+              <img class="film-details__poster-img" src="${poster}" alt="">
 
-              <p class="film-details__age">${age}+</p>
+              <p class="film-details__age">${ageRating}+</p>
             </div>
 
             <div class="film-details__info">
@@ -56,11 +57,11 @@ const createDetailsPopupTemplate = (movie) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">${datePopup}</td>
+                  <td class="film-details__cell">${getReleaseDate(date)}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${duration}</td>
+                  <td class="film-details__cell">${formatMovieDuration(runtime)}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>
@@ -68,12 +69,12 @@ const createDetailsPopupTemplate = (movie) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Genres</td>
-                  <td class="film-details__cell">${genrePopup}</td>
+                  <td class="film-details__cell">${genre.join(`, `)}</td>
                 </tr>
               </table>
 
               <p class="film-details__film-description">
-                ${discriptionPopup}
+                ${description}
               </p>
             </div>
           </div>
@@ -90,7 +91,8 @@ const createDetailsPopupTemplate = (movie) => {
           </section>
         </div>
 
-        <div class="form-details__bottom-container"></div>
+        <div class="form-details__bottom-container">
+        </div>
       </form>
     </section>`
   );

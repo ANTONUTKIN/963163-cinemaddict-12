@@ -1,5 +1,11 @@
 import SmartView from "./smart";
 
+
+const BtnTextState = {
+  DELETING: `Deleting...`,
+  DELETE: `Delete`
+};
+
 export default class Comment extends SmartView {
   constructor(comment) {
     super();
@@ -9,13 +15,13 @@ export default class Comment extends SmartView {
   }
 
   getTemplate() {
-    const {emoji, message, author} = this._comment;
+    const {emotion, comment, author} = this._comment;
     return `<li class="film-details__comment">
         <span class="film-details__comment-emoji">
-          <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-puke">
+          <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-puke">
         </span>
         <div>
-          <p class="film-details__comment-text">${message}</p>
+          <p class="film-details__comment-text">${comment}</p>
           <p class="film-details__comment-info">
             <span class="film-details__comment-author">${author}</span>
             <span class="film-details__comment-day">2 days ago</span>
@@ -25,9 +31,25 @@ export default class Comment extends SmartView {
       </li>`;
   }
 
+  setBtnDeletingState() {
+    this.getElement().querySelector(`.film-details__comment-delete`).textContent = BtnTextState.DELETING;
+  }
+
+  resetBtnDeletingState() {
+    this.getElement().querySelector(`.film-details__comment-delete`).textContent = BtnTextState.DELETE;
+  }
+
+  disableButton() {
+    this.getElement().querySelector(`.film-details__comment-delete`).disabled = true;
+  }
+
+  enableButton() {
+    this.getElement().querySelector(`.film-details__comment-delete`).disabled = false;
+  }
+
   _deleteClickHandler(evt) {
     evt.preventDefault();
-    this._callback.commentDeleteClick(this._comment);
+    this._callback.commentDeleteClick(this._comment.id);
   }
 
   setDeleteCommentClickHandler(callback) {

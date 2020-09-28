@@ -1,7 +1,7 @@
-export const sortRating = (cardA, cardB) => {
-  return cardB.rating - cardA.rating;
+export const sortRating = (a, b) => {
+  return b.rating - a.rating;
 };
 
-export const sortDate = (cardA, cardB) => {
-  return cardB.date - cardA.date;
+export const sortDate = (a, b) => {
+  return b.date.getTime() - a.date.getTime();
 };
