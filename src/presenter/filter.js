@@ -1,5 +1,5 @@
 import FilterView from "../view/filters.js";
-import {renderElement, RenderPosition, replace, removeElement} from "../utils/render.js";
+import {render, RenderPosition, replace, remove} from "../utils/render.js";
 import {filter} from "../utils/filter.js";
 import {FilterType, UpdateType} from "../const.js";
 
@@ -31,18 +31,17 @@ export default class Filter {
     this._filterComponent.setStatisticsClickHandler(this._handleStatisticsClick);
 
     if (prevFilterComponent === null) {
-      renderElement(this._boardContainer, this._filterComponent, RenderPosition.BEFOREEND);
+      render(this._boardContainer, this._filterComponent, RenderPosition.BEFOREEND);
       return;
     }
 
     replace(this._filterComponent, prevFilterComponent);
-    removeElement(prevFilterComponent);
+    remove(prevFilterComponent);
   }
 
   _handleModelEvent() {
     this.init();
   }
-
 
   _getFilters() {
     const movies = this._moviesModel.getMovies();
@@ -70,7 +69,6 @@ export default class Filter {
       },
     ];
   }
-
 
   _handleFilterTypeChange(filterType) {
     if (this._currentFilter === filterType) {

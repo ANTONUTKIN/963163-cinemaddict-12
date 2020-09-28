@@ -1,7 +1,6 @@
 import SmartView from "./smart.js";
 import {getRandomInteger} from "../utils/common.js";
 
-
 const createDetailsPopupTemplate = (card) => {
   const {poster, age, filmName, rating, director, writers, commentsCount, actors, datePopup, duration, country, genrePopup, discriptionPopup, isAddedInWachlist, isWatched, isFavorite, comments, commentsAuthors} = card;
 

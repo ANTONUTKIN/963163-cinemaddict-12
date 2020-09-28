@@ -1,25 +1,4 @@
-export const DATA = {
-  MIN_COMMENTS: 0,
-  MAX_COMMENTS: 5,
-  MIN_SENTENCES: 1,
-  MAX_SENTENCES: 5,
-  MIN_DATE: 1920,
-  MAX_DATE: 2020,
-  MIN_HOURS: 0,
-  MAX_HOURS: 3,
-  MIN_AGE: 12,
-  MAX_AGE: 18,
-  MIN_GENRES: 1,
-  MAX_GENRES: 3,
-  MIN_MINUTES: 0,
-  MAX_MINUTES: 59,
-  MIN_DAYS: 1,
-  MAX_DAYS: 30,
-  MAX_RATING: 10,
-  MIN_WRITERS: 1,
-  MAX_WRITERS: 3,
-  MIN_ACTORS: 2
-};
+
 
 export const SortType = {
   DEFAULT: `default`,
@@ -65,3 +44,13 @@ export const Period = {
   MONTH: `statistic-month`,
   YEAR: `statistic-year`
 };
+
+
+export const MovieDescription = {
+  MAX: 140,
+  MIN: 0,
+  REQUIRE: 139,
+};
+
+export const AUTHORIZATION = `Basic er883jdzbdw`;
+export const END_POINT = `https://12.ecmascript.pages.academy/cinemaddict/`;
