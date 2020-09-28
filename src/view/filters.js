@@ -1,4 +1,3 @@
-// import { filter } from "../utils/filter.js";
 import Abstract from "./abstract.js";
 
 
@@ -15,14 +14,12 @@ export default class StatsFilter extends Abstract {
   getTemplate() {
     const filterItems = this._filters.map((filter) => this._createFilterItem(filter, this._currentFilter)).join(``);
 
-
     return `<nav class="main-navigation">
         <div class="main-navigation__items">
             ${filterItems}
         </div>
         <a href="#stats" class="main-navigation__additional">Stats</a>
     </nav>`;
-
   }
 
   _createFilterItem(filter, currentFilter) {

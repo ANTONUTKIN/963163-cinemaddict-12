@@ -15,7 +15,6 @@ const getAllGenres = (movies) => {
   }, {});
 };
 
-
 const getProfileRating = (movies) => {
   const watchedMoviesCount = getWatchedMoviesCount(movies);
   switch (true) {
@@ -209,7 +208,6 @@ export default class Statistics extends SmartView {
     const {selectedPeriod} = this._data;
     return period === selectedPeriod ? `checked` : ``;
   }
-
 
   _createStatisticsTemplate(movies, period) {
     const {watchedMovies} = period;

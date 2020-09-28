@@ -1,5 +1,6 @@
 
 import SmartView from "./smart.js";
+import he from "he";
 
 class NewComment extends SmartView {
   constructor() {
@@ -54,11 +55,10 @@ class NewComment extends SmartView {
     let newComment = null;
     if (this._checkCommentReady()) {
       newComment = {
-        // id: generateId(),
         author: `User`,
         date: new Date(),
         emotion: this._data.emotion,
-        comment: this._data.comment
+        comment: he.encode(this._data.comment)
       };
     } else {
       this.shake();

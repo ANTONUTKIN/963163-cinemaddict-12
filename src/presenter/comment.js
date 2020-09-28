@@ -22,21 +22,6 @@ class Comment {
     );
   }
 
-  // _renderComments() {
-  //   render(
-  //     this._commentsWrapper,
-  //     this._commentsSection,
-  //     RenderPosition.BEFOREEND
-  //   );
-  //   this._movie.comments.forEach(this.createCommnet);
-  // }
-
-  // createCommnet(comment) {
-  //   const commentMessage = new CommentView(comment);
-  //   render(this._commentsList, commentMessage, RenderPosition.BEFOREEND);
-  //   commentMessage.setDeleteClickHandler(this._deleteCommentClickHandler);
-  // }
-
   setDeletingState() {
     return this._commentComponent.setBtnDeletingState();
   }
