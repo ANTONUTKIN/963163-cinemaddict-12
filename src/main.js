@@ -25,11 +25,9 @@ const moviesModel = new MoviesModel();
 const filterModel = new FilterModel();
 const commentsModel = new CommentsModel();
 
-
 const filterPresenter = new FilterPresenter(mainElement, filterModel, moviesModel);
 const statisticsPresenter = new StatisticsPresenter(mainElement, moviesModel, filterModel);
 const moviesListPresenter = new MovieList(mainElement, moviesModel, filterModel, commentsModel, api);
-
 
 filterPresenter.init();
 statisticsPresenter.init();

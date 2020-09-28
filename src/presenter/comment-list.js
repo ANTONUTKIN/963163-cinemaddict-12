@@ -29,13 +29,11 @@ export default class CommentList {
     this._newCommentComponent.setSubmitCommentHandler(this._handleCommentSubmit);
   }
 
-
   _renderCommentsWrapper() {
     const commentsWrapperComponent = new CommentsWrapperView(this._commentsModel.getComments());
     render(this._commentsContainer, commentsWrapperComponent, RenderPosition.BEFOREEND);
     this._commentsListWrapper = commentsWrapperComponent.getElement().querySelector(`.film-details__comments-list`);
   }
-
 
   _renderCommentsList() {
     const comments = this._commentsModel.getComments();

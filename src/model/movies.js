@@ -52,10 +52,8 @@ export default class Movies extends Observer {
       comments: movie.comments,
     });
 
-
     return adaptedCard;
   }
-
 
   static adaptToServer(movie) {
     const adaptedCard = Object.assign({}, {
