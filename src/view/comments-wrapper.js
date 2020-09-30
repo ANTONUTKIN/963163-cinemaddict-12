@@ -1,6 +1,6 @@
 import AbstractView from "./abstract.js";
 
-export default class CommentsSection extends AbstractView {
+export default class CommentsWrapper extends AbstractView {
   constructor(comments) {
     super();
     this._comments = comments;
@@ -17,9 +17,5 @@ export default class CommentsSection extends AbstractView {
 
   getTemplate() {
     return this._createCommentsWrapper();
-  }
-
-  getCommentsListWrapper() {
-    return this.getElement().querySelector(`.film-details__comments-list`);
   }
 }

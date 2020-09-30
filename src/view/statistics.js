@@ -1,40 +1,11 @@
 import moment from 'moment';
 import Chart from 'chart.js';
 import ChartDataLabels from "chartjs-plugin-datalabels";
-
 import SmartView from "./smart";
+import {Period, BAR_HEIGHT} from '../const';
+import {getProfileRating, getMoviesDuration, getAllGenres, getTopGenre, getDurationInHours, getDurationInMinutes} from '../utils/movie';
+import {getCurrentDate} from '../utils/common';
 
-import {Period} from '../const';
-const BAR_HEIGHT = 50;
-
-const getAllGenres = (movies) => {
-  const allGenres = movies.map((movie) => movie.genre).flat();
-  return allGenres.reduce((accumulator, currentValue) => {
-    accumulator[currentValue] = accumulator[currentValue] ? ++accumulator[currentValue] : 1;
-    return accumulator;
-  }, {});
-};
-
-const getProfileRating = (movies) => {
-  const watchedMoviesCount = getWatchedMoviesCount(movies);
-  switch (true) {
-    case (watchedMoviesCount >= 1 && watchedMoviesCount <= 10):
-      return `novice`;
-    case (watchedMoviesCount >= 11 && watchedMoviesCount <= 20):
-      return `fan`;
-    case (watchedMoviesCount >= 21):
-      return `movie buff`;
-    default:
-      return ``;
-  }
-};
-
-const getCurrentDate = () => {
-  const currentDate = new Date();
-  currentDate.setHours(23, 59, 59, 999);
-
-  return new Date(currentDate);
-};
 
 const renderChart = (statisticCtx, movies) => {
   const allGenres = getAllGenres(movies);
@@ -106,34 +77,6 @@ const renderChart = (statisticCtx, movies) => {
       },
     },
   });
-};
-
-
-const getWatchedMoviesCount = (movies) => {
-  return movies.filter((movie) => movie.isWatched).length;
-};
-
-const getMoviesDuration = (movies) => {
-  return movies.reduce((acc, movie) => {
-    return acc + movie.runtime;
-  }, 0);
-};
-
-const getDurationInHours = (allDuration) => moment.duration({minutes: allDuration}).hours();
-const getDurationInMinutes = (allDuration) => moment.duration({minutes: allDuration}).minutes();
-
-
-const getTopGenre = (watchedMovies) => {
-  const genres = getAllGenres(watchedMovies);
-  let favoriteGenre = ``;
-  let maxNumOfViews = 0;
-  for (const genre in genres) {
-    if (genres[genre] > maxNumOfViews) {
-      maxNumOfViews = genres[genre];
-      favoriteGenre = genre;
-    }
-  }
-  return favoriteGenre;
 };
 
 export default class Statistics extends SmartView {
@@ -209,12 +152,10 @@ export default class Statistics extends SmartView {
     return period === selectedPeriod ? `checked` : ``;
   }
 
-  _createStatisticsTemplate(movies, period) {
+  _createStatisticsTemplate(period) {
     const {watchedMovies} = period;
     const watchedMoviesCount = watchedMovies.length;
     const allMoviesDuration = getMoviesDuration(watchedMovies);
-
-
     const label = getProfileRating(this._movies);
     const topGenre = getTopGenre(watchedMovies);
 
@@ -268,7 +209,7 @@ export default class Statistics extends SmartView {
   }
 
   getTemplate() {
-    return this._createStatisticsTemplate(this._movies, this._data);
+    return this._createStatisticsTemplate(this._data);
   }
 
   _setChart() {
