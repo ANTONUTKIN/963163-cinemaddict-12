@@ -1,7 +1,7 @@
 import Abstract from "./abstract.js";
 
 
-export default class StatsFilter extends Abstract {
+export default class Filters extends Abstract {
   constructor(filters, currentFilterType) {
     super();
     this._filters = filters;

@@ -1,6 +1,3 @@
-import moment from "moment";
-
-
 export const generateId = () => Math.random().toString(36).substr(2, 9);
 
 export const getRandomInteger = (a = 0, b = 1) => {
@@ -10,6 +7,9 @@ export const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-export const filmReleaseDate = (dueDate) => {
-  return moment(dueDate).format(`D MMMM YYYY`);
+export const getCurrentDate = () => {
+  const currentDate = new Date();
+  currentDate.setHours(23, 59, 59, 999);
+
+  return new Date(currentDate);
 };

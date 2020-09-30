@@ -62,7 +62,9 @@ export default class MovieList {
 
     this._cardBoardComponent = new CardBoard();
     render(this._boardContainer, this._cardBoardComponent, RenderPosition.BEFOREEND);
-    this._renderMovies(movies.slice(0, MOVIES_COUNT_PER_STEP));
+
+
+    this._renderMovies(movies.slice(0, this._renderedMoviesCount));
 
 
     if (movies.length > this._renderedMoviesCount) {
@@ -137,13 +139,11 @@ export default class MovieList {
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
-
         this._moviePresenter[data.id].init(data);
         break;
       case UpdateType.MINOR:
         this._clearMoviesList();
         this._renderMoviesList();
-
         break;
       case UpdateType.MAJOR:
         this._clearMoviesList({resetRenderedMoviesCount: true, resetSortType: true});
@@ -215,7 +215,7 @@ export default class MovieList {
     if (resetRenderedMoviesCount) {
       this._renderedMoviesCount = MOVIES_COUNT_PER_STEP;
     } else {
-      this._renderedMoviesCount = Math.min(this._getMovies().length, this._renderedCardsCount);
+      this._renderedMoviesCount = Math.min(this._getMovies().length, this._renderedMoviesCount);
     }
 
     if (resetSortType) {

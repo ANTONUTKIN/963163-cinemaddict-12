@@ -1,7 +1,7 @@
 import Abstract from "./abstract.js";
 import {SortType} from "../const.js";
 
-export default class SortList extends Abstract {
+export default class Sort extends Abstract {
   constructor(currentSortType) {
     super();
 

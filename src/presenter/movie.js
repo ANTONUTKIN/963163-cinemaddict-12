@@ -139,7 +139,7 @@ export default class Movie {
     this._api.updateMovies(update).then((updatedMovie) => {
       this._changeData(
           UserAction.UPDATE_MOVIE,
-          UpdateType.PATCH,
+          UpdateType.MINOR,
           Object.assign(
               {},
               updatedMovie

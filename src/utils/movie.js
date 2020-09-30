@@ -22,17 +22,48 @@ export const getWatchedMoviesCount = (movies) => {
   return movies.filter((movie) => movie.isWatched).length;
 };
 
-export const getUserRating = (movies) => {
-  const watchedCount = getWatchedMoviesCount(movies);
-  let rating = ``;
-  if (watchedCount >= 1 && watchedCount <= 10) {
-    rating = `novice`;
-  } else if (watchedCount <= 20) {
-    rating = `fan`;
-  } else {
-    rating = `movie buff`;
+export const getProfileRating = (movies) => {
+  const watchedMoviesCount = getWatchedMoviesCount(movies);
+  switch (true) {
+    case (watchedMoviesCount >= 1 && watchedMoviesCount <= 10):
+      return `novice`;
+    case (watchedMoviesCount >= 11 && watchedMoviesCount <= 20):
+      return `fan`;
+    case (watchedMoviesCount >= 21):
+      return `movie buff`;
+    default:
+      return ``;
   }
-  return rating;
+};
+
+export const getMoviesDuration = (movies) => {
+  return movies.reduce((acc, movie) => {
+    return acc + movie.runtime;
+  }, 0);
+};
+
+export const getAllGenres = (movies) => {
+  const allGenres = movies.map((movie) => movie.genre).flat();
+  return allGenres.reduce((accumulator, currentValue) => {
+    accumulator[currentValue] = accumulator[currentValue] ? ++accumulator[currentValue] : 1;
+    return accumulator;
+  }, {});
+};
+
+
+export const getTopGenre = (watchedMovies) => {
+  const genres = getAllGenres(watchedMovies);
+  let favoriteGenre = ``;
+  let maxNumOfViews = 0;
+  for (const genre in genres) {
+    if (genres[genre] > maxNumOfViews) {
+      maxNumOfViews = genres[genre];
+      favoriteGenre = genre;
+    }
+  }
+  return favoriteGenre;
 };
 
 export const getFormatedDescription = (description) => description.length > MovieDescription.MAX ? `${description.substring(MovieDescription.MIN, MovieDescription.REQUIRE)}...` : description;
+export const getDurationInHours = (allDuration) => moment.duration({minutes: allDuration}).hours();
+export const getDurationInMinutes = (allDuration) => moment.duration({minutes: allDuration}).minutes();

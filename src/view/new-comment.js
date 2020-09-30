@@ -1,6 +1,5 @@
 
 import SmartView from "./smart.js";
-import he from "he";
 
 class NewComment extends SmartView {
   constructor() {
@@ -58,7 +57,7 @@ class NewComment extends SmartView {
         author: `User`,
         date: new Date(),
         emotion: this._data.emotion,
-        comment: he.encode(this._data.comment)
+        comment: this._data.comment
       };
     } else {
       this.shake();
@@ -72,7 +71,7 @@ class NewComment extends SmartView {
   }
 
   _commentSubmitHandler(evt) {
-    if (evt.ctrlKey && evt.key === `Enter`) {
+    if ((evt.ctrlKey || evt.metaKey) && evt.key === `Enter`) {
       evt.preventDefault();
       this._callback.submitComment();
     }
