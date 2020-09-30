@@ -45,6 +45,8 @@ export const Period = {
   YEAR: `statistic-year`
 };
 
+export const BAR_HEIGHT = 50;
+
 
 export const MovieDescription = {
   MAX: 140,

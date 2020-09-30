@@ -193,7 +193,7 @@ const createDetailsPopupTemplate = (card) => {
   );
 };
 
-export default class CardPopup extends SmartView {
+export default class PopupCard extends SmartView {
   constructor(card) {
     super();
     this.card = card;

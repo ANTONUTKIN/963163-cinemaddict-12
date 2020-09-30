@@ -6,7 +6,7 @@ const createLoadMoreButtonTemplate = () => {
   );
 };
 
-export default class LoadMore extends Abstract {
+export default class LoadMoreButton extends Abstract {
   constructor() {
     super();
     this._clickHandler = this._clickHandler.bind(this);
